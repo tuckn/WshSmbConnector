@@ -1,0 +1,40 @@
+﻿<package>
+  <!-- dependencies -->
+  <resource id="WshJest">https://github.com/tuckn/WshJest.git</resource>
+  <resource id="WshBasicPackage">https://github.com/tuckn/WshBasicPackage.git</resource>
+
+  <!-- scripts: test -->
+  <job id = "test:SmbConnector">
+    <script language="JScript" src="./WshModules/WshBasicPackage/dist/bundle.js"></script>
+    <script language="JScript" src="./src/SmbConnector.js"></script>
+    <script language="JScript" src="./WshModules/WshJest/dist/app.js"></script>
+    <script language="JScript" src="./src/SmbConnector.test.js"></script>
+  </job>
+
+  <!-- scripts: build -->
+  <job id = "./dist/module.js">
+    <script language="JScript" src="./src/SmbConnector.js"></script>
+  </job>
+  <job id = "./dist/bundle.js">
+    <script language="JScript" src="./WshModules/WshBasicPackage/dist/bundle.js"></script>
+    <script language="JScript" src="./src/SmbConnector.js"></script>
+  </job>
+  <job id = "./dist/Run.wsf">
+    <script language="JScript" src="./WshModules/WshBasicPackage/dist/bundle.js"></script>
+    <script language="JScript" src="./src/SmbConnector.js"></script>
+    <script language="JScript" src="./src/Run.js"></script>
+  </job>
+
+  <!-- scripts: test dist -->
+  <job id = "test:dist:module">
+    <script language="JScript" src="./WshModules/WshBasicPackage/dist/bundle.js"></script>
+    <script language="JScript" src="./dist/module.js"></script>
+    <script language="JScript" src="./WshModules/WshJest/dist/app.js"></script>
+    <script language="JScript" src="./src/SmbConnector.test.js"></script>
+  </job>
+  <job id = "test:dist:bundle">
+    <script language="JScript" src="./dist/bundle.js"></script>
+    <script language="JScript" src="./WshModules/WshJest/dist/app.js"></script>
+    <script language="JScript" src="./src/SmbConnector.test.js"></script>
+  </job>
+</package>
