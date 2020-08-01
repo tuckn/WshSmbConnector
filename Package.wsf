@@ -10,6 +10,17 @@
     <script language="JScript" src="./WshModules/WshJest/dist/app.js"></script>
     <script language="JScript" src="./src/SmbConnector.test.js"></script>
   </job>
+  <job id = "test:Run">
+    <script language="JScript" src="./WshModules/WshBasicPackage/dist/bundle.js"></script>
+    <script language="JScript" src="./src/SmbConnector.js"></script>
+    <script language="JScript" src="./WshModules/WshJest/dist/app.js"></script>
+    <script language="JScript" src="./src/Run.test.js"></script>
+  </job>
+  <job id = "test:src:Run">
+    <script language="JScript" src="./WshModules/WshBasicPackage/dist/bundle.js"></script>
+    <script language="JScript" src="./src/SmbConnector.js"></script>
+    <script language="JScript" src="./src/Run.js"></script>
+  </job>
 
   <!-- scripts: build -->
   <job id = "./dist/module.js">

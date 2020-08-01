@@ -1,7 +1,16 @@
 ﻿/* globals Wsh: false */
 
 (function () {
-  if (Wsh && Wsh.Net.SMB && Wsh.Net.SMB.connectSyncUsingSchema) return;
+  if (Wsh && Wsh.SmbConnector) return;
+
+  /**
+   * The WSH (Windows Script Host) CLI that connects to SMB resources according to the schema defined in a JSON file.
+   *
+   * @namespace SmbConnector
+   * @memberof Wsh
+   * @requires {@link https://github.com/tuckn/WshBasicPackage|tuckn/WshBasicPackage}
+   */
+  Wsh.SmbConnector = {};
 
   // Shorthands
   var util = Wsh.Util;
@@ -18,8 +27,10 @@
   var isSolidString = util.isSolidString;
   var isPlainObject = util.isPlainObject;
 
+  var smbcn = Wsh.SmbConnector; // Shorthand
+
   /** @constant {string} */
-  var MODULE_TITLE = 'WshNet/SMB.js';
+  var MODULE_TITLE = 'WshSmbConnector/SmbConnector.js';
 
   var throwErrNonStr = function (functionName, typeErrVal) {
     util.throwTypeError('string', MODULE_TITLE, functionName, typeErrVal);
@@ -33,12 +44,25 @@
     fs.throwTypeErrorNonExisting(MODULE_TITLE, functionName, typeErrVal);
   };
 
-  // net.SMB.connectSyncSurelyUsingLog {{{
+  // smbcn.connectSyncSurelyUsingLog {{{
   /**
    * Connects the comp to a share resource
    *
+   * @example
+   * var smbcn = Wsh.SmbConnector; // Shorthand
+   *
+   * var comp = '11.22.33.44';
+   * var share = 'public';
+   * var domain = 'PCNAME';
+   * var user = 'UserId';
+   * var pwd = 'My * P@ss><';
+   *
+   * smbcn.connectSyncSurelyUsingLog(comp, share, domain, user, pwd, {
+   *   logger: 'warn/winEvent', // See https://github.com/tuckn/WshLogger
+   *   showsResult: true
+   * });
    * @function connectSyncSurelyUsingLog
-   * @memberof Wsh.Net.SMB
+   * @memberof Wsh.SmbConnector
    * @param {string} comp - The computer name
    * @param {string} [shareName='IPC$'] - The share name
    * @param {string} [domain=''] - The domain name. If it is empty, net use uses the current logged on domain.
@@ -50,10 +74,10 @@
    * @param {boolean} [options.throws=false] - Throws the error, if SMB connecting throws an error.
    * @param {boolean} [options.showsResult=false] - Shows the current session after connecting.
    * @param {boolean} [options.isDryRun=false] - No execute, returns the string of command.
-   * @returns {void|string} - If options.isDryRun is true, returns string.
+   * @returns {void}
    */
-  net.SMB.connectSyncSurelyUsingLog = function (comp, shareName, domain, user, pwd, options) {
-    var FN = 'net.SMB.connectSyncSurelyUsingLog';
+  smbcn.connectSyncSurelyUsingLog = function (comp, shareName, domain, user, pwd, options) {
+    var FN = 'smbcn.connectSyncSurelyUsingLog';
 
     var loggerObj = obtain(options, 'logger', {});
     var lggr = logger.create(loggerObj);
@@ -73,6 +97,8 @@
       retVal = net.SMB.connectSyncSurely(comp, shareName, domain, user, pwd, {
         isDryRun: isDryRun
       });
+
+      if (isDryRun) lggr.info('dry-run [' + FN + ']: ' + retVal);
       lggr.success('Succeeded the connecting!');
     } catch (e) {
       if (throws) throw new Error(insp(e));
@@ -86,11 +112,10 @@
     var showsResult = obtain(options, 'showsResult', false);
     if (showsResult) net.SMB.showCurrentSession();
 
-    if (isDryRun) return 'dry-run [' + FN + ']: ' + retVal;
     return;
   }; // }}}
 
-  // net.SMB.connectSyncUsingSchema {{{
+  // smbcn.connectSyncUsingSchema {{{
   /**
    * @typedef {object} typeNetSmbConnectSchema
    * @property {object} components
@@ -112,6 +137,7 @@
    * Connects the Windows to a share resource
    *
    * @example
+   * var smbcn = Wsh.SmbConnector; // Shorthand
    * var schema = {
    *   components: {
    *     ipc: 'IPC$',
@@ -148,7 +174,7 @@
    *   }
    * }
    *
-   * Wsh.Net.SMB.connectSyncUsingSchema(schema, 'work:*', {
+   * smbcn.connectSyncUsingSchema(schema, 'work:*', {
    *   logger: 'info/console',
    *   showsResult: true,
    *   overwrites: { anyVal1: 'myHomeP@ss', anyVal2: 'officeP@ss' }
@@ -156,7 +182,7 @@
    * // Only process work:labo. work:office is not processed because available is false.
    * // command is `net use \\PC67890\C$ myP@ss /user:PC67890\ID123456`
    * @function connectSyncUsingSchema
-   * @memberof Wsh.Net.SMB
+   * @memberof Wsh.SmbConnector
    * @param {typeNetSmbConnectSchema} schema
    * @param {string} [query] - The resource name to connect
    * @param {object} [options] - Optional parameters.
@@ -166,8 +192,8 @@
    * @param {boolean} [options.isDryRun=false] - No execute, returns the string of command.
    * @returns {void|string} - If options.isDryRun is true, returns string.
    */
-  net.SMB.connectSyncUsingSchema = function (schema, query, options) {
-    var FN = 'net.SMB.connectSyncUsingSchema';
+  smbcn.connectSyncUsingSchema = function (schema, query, options) {
+    var FN = 'smbcn.connectSyncUsingSchema';
     if (!isPlainObject(schema)) throwErrNonObject(FN, schema);
     if (!isSolidString(query)) throwErrNonStr(FN, query);
 
@@ -205,8 +231,9 @@
     }
 
     var rsrcs = schema.resources; // Shorthand
+
     var isDryRun = obtain(options, 'isDryRun', false);
-    var retLog = 'dry-run [' + FN + ']:';
+    if (isDryRun) lggr.info('dry-run [' + FN + ']:');
 
     filterdNames.forEach(function (rsrcName) {
       if (rsrcs[rsrcName].available === false) {
@@ -219,10 +246,9 @@
       var domain = tmpParser(rsrcs[rsrcName].domain || '', vals);
       var user = tmpParser(rsrcs[rsrcName].user || '', vals);
       var pwd = tmpParser(rsrcs[rsrcName].pwd || '', vals);
-      var retVal;
 
       try {
-        retVal = net.SMB.connectSyncSurelyUsingLog(
+        smbcn.connectSyncSurelyUsingLog(
           comp, share, domain, user, pwd,
           objAdd({}, options, {
             logger: lggr,
@@ -231,8 +257,6 @@
             throws: false
           })
         );
-
-        if (isDryRun) retLog += '\n' + retVal;
       } catch (e) { // It does not stop with an error.
         lggr.error(insp(e));
       }
@@ -245,7 +269,6 @@
     var showsResult = obtain(options, 'showsResult', false);
     if (showsResult) net.SMB.showCurrentSession();
 
-    if (isDryRun) return retLog;
     return;
   }; // }}}
 })();

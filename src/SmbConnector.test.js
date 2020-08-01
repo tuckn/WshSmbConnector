@@ -1,5 +1,4 @@
 ﻿/* globals Wsh: false */
-/* globals __filename: false */
 /* globals process: false */
 
 /* globals describe: false */
@@ -7,25 +6,18 @@
 /* globals expect: false */
 
 // Shorthand
-var util = Wsh.Util;
-var path = Wsh.Path;
 var os = Wsh.OS;
 var fs = Wsh.FileSystem;
 var fse = Wsh.FileSystemExtra;
-var child_process = Wsh.ChildProcess;
-var net = Wsh.Net;
 var logger = Wsh.Logger;
+var smbcn = Wsh.SmbConnector;
 
-var includes = util.includes;
-var srr = os.surroundPath;
+var escapeForCmd = os.escapeForCmd;
 var CMD = os.exefiles.cmd;
-var CSCRIPT = os.exefiles.cscript;
 var NET = os.exefiles.net;
-var execSync = child_process.execSync;
 
 var noneStrVals = [true, false, undefined, null, 0, 1, NaN, Infinity, [], {}];
 var noneObjVals = [true, false, undefined, null, 0, 1, NaN, Infinity, [], ''];
-var testCmd = srr(CSCRIPT) + ' ' + srr(__filename) + ' //job:test:SMB';
 
 var _cb = function (fn/* , args */) {
   var args = Array.from(arguments).slice(1);
@@ -34,8 +26,7 @@ var _cb = function (fn/* , args */) {
 
 var _getCmdNetDel = function (comp, share) {
   return 'dry-run [_shRun]: ' + CMD + ' /S /C"'
-      + NET + ' use ' + '\\\\' + comp + '\\' + share
-      + ' /delete /yes 1> ';
+      + NET + ' use ' + '\\\\' + comp + '\\' + share + ' /delete /yes 1> ';
 };
 
 var _getCmdNetCn = function (comp, share, domain, user, pwd) {
@@ -43,7 +34,7 @@ var _getCmdNetCn = function (comp, share, domain, user, pwd) {
 
   return 'dry-run [_shRun]: ' + CMD + ' /S /C"'
     + NET + ' use ' + '\\\\' + comp + '\\' + share
-    + ' ' + pwd + ' /user:' + domainStr + user + ' /persistent:no 1> ';
+    + ' ' + escapeForCmd(pwd) + ' /user:' + domainStr + user + ' /persistent:no 1> ';
 };
 
 describe('SmbConnector', function () {
@@ -56,38 +47,38 @@ describe('SmbConnector', function () {
     var domain = 'PCNAME';
     var user = 'UserId';
     var pwd = 'usrP@ss';
-    var retVal;
 
     var logFile = os.makeTmpPath() + '.log';
     var lggr = logger.create('info/' + logFile);
 
     // dry-run
-    retVal = net.SMB.connectSyncSurelyUsingLog(
+    var retVal = smbcn.connectSyncSurelyUsingLog(
       comp, shareName, domain, user, pwd, {
         logger: lggr,
         isDryRun: true
       }
     );
-    // console.log(retVal);
-    expect(retVal).toContain('dry-run [net.SMB.connectSyncSurelyUsingLog]: ');
-    expect(retVal).toContain('dry-run [net.SMB.connectSyncSurely]: ');
-    expect(retVal).toContain('dry-run [net.SMB.disconnectSync]: ');
-    expect(retVal).toContain('dry-run [_shRun]: ' + CMD + ' /S /C"'
-      + NET + ' use ' + '\\\\' + comp + '\\' + shareName + ' /delete /yes 1> ');
-    expect(retVal).toContain('dry-run [_shRun]: ' + CMD + ' /S /C"'
-      + NET + ' use ' + '\\\\' + comp + '\\' + shareName
-      + ' ' + pwd + ' /user:' + domain + '\\' + user + ' /persistent:no 1> ');
+    expect(retVal).toBeUndefined();
 
     var logStr = fs.readFileSync(logFile, { encoding: 'utf8' });
     // console.log(logStr);
-    expect(logStr).toContain(' info    Start the function net.SMB.connectSyncSurelyUsingLog');
+    expect(logStr).toContain('dry-run [smbcn.connectSyncSurelyUsingLog]: ');
+    expect(logStr).toContain('dry-run [net.SMB.connectSyncSurely]: ');
+    expect(logStr).toContain('dry-run [net.SMB.disconnectSync]: ');
+    expect(logStr).toContain('dry-run [_shRun]: ' + CMD + ' /S /C"'
+      + NET + ' use ' + '\\\\' + comp + '\\' + shareName + ' /delete /yes 1> ');
+    expect(logStr).toContain('dry-run [_shRun]: ' + CMD + ' /S /C"'
+      + NET + ' use ' + '\\\\' + comp + '\\' + shareName
+      + ' ' + pwd + ' /user:' + domain + '\\' + user + ' /persistent:no 1> ');
+
+    expect(logStr).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
     expect(logStr).toContain(' info    Connecting to "' + comp + '"');
     expect(logStr).toContain(' info    shareName: "' + shareName + '"');
     expect(logStr).toContain(' info    domain: "' + domain + '", user: "' + user + '"');
     expect(logStr).toContain(' info    password: "****"');
     expect(logStr).toContain(' info    throws: false');
     expect(logStr).toContain(' success Succeeded the connecting!');
-    expect(logStr).toContain(' info    Finished the function net.SMB.connectSyncSurelyUsingLog');
+    expect(logStr).toContain(' info    Finished the function smbcn.connectSyncSurelyUsingLog');
 
     // Cleans
     fse.removeSync(logFile);
@@ -146,37 +137,37 @@ describe('SmbConnector', function () {
     var user;
     var pwd;
 
-    retVal = net.SMB.connectSyncUsingSchema(schema, '*', {
+    retVal = smbcn.connectSyncUsingSchema(schema, '*', {
       logger: lggr,
       isDryRun: true
     });
-    // console.log(retVal);
+    expect(retVal).toBeUndefined();
+
     var logStr = fs.readFileSync(logFile, { encoding: 'utf8' });
     // console.log(logStr);
 
-    expect(logStr).toContain(' info    Start the function net.SMB.connectSyncSurelyUsingLog');
+    expect(logStr).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
     expect(logStr).toContain(' info    query: "*"');
 
-    expect(retVal).toContain('dry-run [net.SMB.connectSyncUsingSchema]:');
-    expect(retVal).toContain('dry-run [net.SMB.connectSyncSurelyUsingLog]:');
+    expect(logStr).toContain('dry-run [smbcn.connectSyncUsingSchema]:');
+    expect(logStr).toContain('dry-run [smbcn.connectSyncSurelyUsingLog]:');
 
-    expect(retVal).toContain('dry-run [net.SMB.connectSyncSurely]:');
-    expect(retVal).toContain('dry-run [net.SMB.disconnectSync]:');
+    expect(logStr).toContain('dry-run [net.SMB.connectSyncSurely]:');
+    expect(logStr).toContain('dry-run [net.SMB.disconnectSync]:');
 
-    expect(logStr).toContain(' info    Finished the function net.SMB.connectSyncSurelyUsingLog');
 
     comp = schema.components.homeNasIP;
     share = schema.components.ipc;
     domain = '';
     user = schema.resources.home.user;
     pwd = 'null';
-    expect(retVal).toContain(_getCmdNetDel(comp, share));
-    expect(retVal).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(logStr).toContain(' info    Connecting to "' + comp + '"');
     expect(logStr).toContain(' info    shareName: "' + share + '"');
     expect(logStr).toContain(' info    domain: "' + domain + '", user: "' + user + '"');
     expect(logStr).toContain(' info    password: "****"');
     expect(logStr).toContain(' info    throws: false');
+    expect(logStr).toContain(_getCmdNetDel(comp, share));
+    expect(logStr).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(logStr).toContain(' success Succeeded the connecting!');
 
     comp = schema.resources['work:office'].comp;
@@ -184,23 +175,25 @@ describe('SmbConnector', function () {
     domain = schema.components.workNetDomain;
     user = schema.components.workUsername;
     pwd = 'null';
-    expect(retVal).not.toContain(_getCmdNetDel(comp, share));
-    expect(retVal).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(logStr).not.toContain(' info    Connecting to "' + comp + '"');
+    expect(logStr).not.toContain(_getCmdNetDel(comp, share));
+    expect(logStr).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
 
     comp = schema.resources['work:labo'].comp;
     share = schema.resources['work:labo'].share;
     domain = schema.resources['work:labo'].domain;
     user = schema.components.workUsername;
     pwd = 'null';
-    expect(retVal).toContain(_getCmdNetDel(comp, share));
-    expect(retVal).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(logStr).toContain(' info    Connecting to "' + comp + '"');
     expect(logStr).toContain(' info    shareName: "' + share + '"');
     expect(logStr).toContain(' info    domain: "' + domain + '", user: "' + user + '"');
     expect(logStr).toContain(' info    password: "****"');
     expect(logStr).toContain(' info    throws: false');
+    expect(logStr).toContain(_getCmdNetDel(comp, share));
+    expect(logStr).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(logStr).toContain(' success Succeeded the connecting!');
+
+    expect(logStr).toContain(' info    Finished the function smbcn.connectSyncSurelyUsingLog');
 
     // Cleans
     fse.removeSync(logFile);
@@ -218,40 +211,39 @@ describe('SmbConnector', function () {
     var user;
     var pwd;
 
-    var anyVal1 = 'myHomeP@ss';
+    var anyVal1 = 'My * P@ss><';
 
-    retVal = net.SMB.connectSyncUsingSchema(schema, 'home', {
+    retVal = smbcn.connectSyncUsingSchema(schema, 'home', {
       logger: lggr,
       overwrites: { anyVal1: anyVal1 },
       isDryRun: true
     });
-    // console.log(retVal);
+    expect(retVal).toBeUndefined();
+
     var logStr = fs.readFileSync(logFile, { encoding: 'utf8' });
     // console.log(logStr);
 
-    expect(logStr).toContain(' info    Start the function net.SMB.connectSyncSurelyUsingLog');
+    expect(logStr).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
     expect(logStr).toContain(' info    query: "home"');
 
-    expect(retVal).toContain('dry-run [net.SMB.connectSyncUsingSchema]:');
-    expect(retVal).toContain('dry-run [net.SMB.connectSyncSurelyUsingLog]:');
+    expect(logStr).toContain('dry-run [smbcn.connectSyncUsingSchema]:');
+    expect(logStr).toContain('dry-run [smbcn.connectSyncSurelyUsingLog]:');
 
-    expect(retVal).toContain('dry-run [net.SMB.connectSyncSurely]:');
-    expect(retVal).toContain('dry-run [net.SMB.disconnectSync]:');
-
-    expect(logStr).toContain(' info    Finished the function net.SMB.connectSyncSurelyUsingLog');
+    expect(logStr).toContain('dry-run [net.SMB.connectSyncSurely]:');
+    expect(logStr).toContain('dry-run [net.SMB.disconnectSync]:');
 
     comp = schema.components.homeNasIP;
     share = schema.components.ipc;
     domain = '';
     user = schema.resources.home.user;
     pwd = anyVal1;
-    expect(retVal).toContain(_getCmdNetDel(comp, share));
-    expect(retVal).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(logStr).toContain(' info    Connecting to "' + comp + '"');
     expect(logStr).toContain(' info    shareName: "' + share + '"');
     expect(logStr).toContain(' info    domain: "' + domain + '", user: "' + user + '"');
     expect(logStr).toContain(' info    password: "****"');
     expect(logStr).toContain(' info    throws: false');
+    expect(logStr).toContain(_getCmdNetDel(comp, share));
+    expect(logStr).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(logStr).toContain(' success Succeeded the connecting!');
 
     comp = schema.resources['work:office'].comp;
@@ -259,18 +251,20 @@ describe('SmbConnector', function () {
     domain = schema.components.workNetDomain;
     user = schema.components.workUsername;
     pwd = 'null';
-    expect(retVal).not.toContain(_getCmdNetDel(comp, share));
-    expect(retVal).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(logStr).not.toContain(' info    Connecting to "' + comp + '"');
+    expect(logStr).not.toContain(_getCmdNetDel(comp, share));
+    expect(logStr).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
 
     comp = schema.resources['work:labo'].comp;
     share = schema.resources['work:labo'].share;
     domain = schema.resources['work:labo'].domain;
     user = schema.components.workUsername;
     pwd = 'null';
-    expect(retVal).not.toContain(_getCmdNetDel(comp, share));
-    expect(retVal).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(logStr).not.toContain(' info    Connecting to "' + comp + '"');
+    expect(logStr).not.toContain(_getCmdNetDel(comp, share));
+    expect(logStr).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
+
+    expect(logStr).toContain(' info    Finished the function smbcn.connectSyncSurelyUsingLog');
 
     // Cleans
     fse.removeSync(logFile);
@@ -283,14 +277,14 @@ describe('SmbConnector', function () {
 
     var options = { throws: false, showResult: true };
 
-    net.SMB.connectSyncUsingSchema(schema, '*', options);
+    smbcn.connectSyncUsingSchema(schema, '*', options);
 
     noneObjVals.forEach(function (val) {
-      expect(_cb(net.SMB.connectSyncUsingSchema, val)).toThrowError();
+      expect(_cb(smbcn.connectSyncUsingSchema, val)).toThrowError();
     });
 
     noneStrVals.forEach(function (val) {
-      expect(_cb(net.SMB.connectSyncUsingSchema, schema, val)).toThrowError();
+      expect(_cb(smbcn.connectSyncUsingSchema, schema, val)).toThrowError();
     });
   });
 });

@@ -1,0 +1,38 @@
+{
+    "connectSchema": {
+        "description": "Example Schema WshSmbConnector",
+        "components": {
+            "ipc": "IPC$",
+            "homeNasIP": "11.22.33.44",
+            "workNetDomain": "mycompany.local",
+            "workUsername": "ID123456",
+            "anyVal1": null,
+            "anyVal2": null
+        },
+        "resources": {
+            "home": {
+                "comp": "${homeNasIP}",
+                "share": "${ipc}",
+                "user": "tuckn",
+                "pwd": "${anyVal1}"
+            },
+            "work:office": {
+                "available": false,
+                "comp": "SV12345",
+                "share": "${ipc}",
+                "domain": "${workNetDomain}",
+                "user": "${workUsername}",
+                "pwd": "${anyVal2}"
+            },
+            "work:labo": {
+                "description": "Test Server (Windows Server2008)",
+                "available": true,
+                "comp": "PC67890",
+                "share": "C$",
+                "domain": "PC67890",
+                "user": "${workUsername}",
+                "pwd": "${anyVal2}"
+            }
+        }
+    }
+}
