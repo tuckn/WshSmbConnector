@@ -70,7 +70,7 @@
    * @param {string} [pwd] - The password. *: produce a prompt for the password.
    * @param {object} [options] - Optional parameters.
    * @param {(Logger|string|object)} [options.logger] - The Logger instance or create options. See {@link https://docs.tuckn.net/WshLogger/Wsh.Logger.html#.create|Wsh.Logger.create}.
-   * @param {boolean} [options.transporsLog=true] - Outputs Wsh.Logger logs after connecting. See {@link https://docs.tuckn.net/WshLogger/Wsh.Logger.html#.this.transport|Wsh.Logger.transport}.
+   * @param {boolean} [options.transportsLog=true] - Outputs Wsh.Logger logs after connecting. See {@link https://docs.tuckn.net/WshLogger/Wsh.Logger.html#.this.transport|Wsh.Logger.transport}.
    * @param {boolean} [options.throws=false] - Throws the error, if SMB connecting throws an error.
    * @param {boolean} [options.showsResult=false] - Shows the current session after connecting.
    * @param {boolean} [options.isDryRun=false] - No execute, returns the string of command.
@@ -106,8 +106,8 @@
     }
 
     lggr.info('Finished the function ' + FN);
-    var transporsLog = obtain(options, 'transporsLog', true);
-    if (transporsLog) lggr.transport();
+    var transportsLog = obtain(options, 'transportsLog', true);
+    if (transportsLog) lggr.transport();
 
     var showsResult = obtain(options, 'showsResult', false);
     if (showsResult) net.SMB.showCurrentSession();
@@ -209,10 +209,10 @@
     } else {
       regNameMatcher = new RegExp(query);
     }
-    var filterdNames = rsrcNames.filter(function (rsrcName) {
+    var filteredNames = rsrcNames.filter(function (rsrcName) {
       return regNameMatcher.test(rsrcName);
     });
-    lggr.info('matched tasks: ' + filterdNames.length);
+    lggr.info('matched tasks: ' + filteredNames.length);
 
     var vals = schema.components; // Shorthand
 
@@ -235,9 +235,9 @@
     var isDryRun = obtain(options, 'isDryRun', false);
     if (isDryRun) lggr.info('dry-run [' + FN + ']:');
 
-    filterdNames.forEach(function (rsrcName) {
+    filteredNames.forEach(function (rsrcName) {
       if (rsrcs[rsrcName].available === false) {
-        lggr.info('Skip the non-availabel resource: ' + rsrcName);
+        lggr.info('Skip the non-available task: ' + rsrcName);
         return;
       }
 
@@ -252,7 +252,7 @@
           comp, share, domain, user, pwd,
           objAdd({}, options, {
             logger: lggr,
-            transporsLog: false,
+            transportsLog: false,
             showsResult: false,
             throws: false
           })
@@ -263,8 +263,8 @@
     });
 
     lggr.info('Finished function ' + FN);
-    var transporsLog = obtain(options, 'transporsLog', true);
-    if (transporsLog) lggr.transport();
+    var transportsLog = obtain(options, 'transportsLog', true);
+    if (transportsLog) lggr.transport();
 
     var showsResult = obtain(options, 'showsResult', false);
     if (showsResult) net.SMB.showCurrentSession();

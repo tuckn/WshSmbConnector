@@ -141,7 +141,7 @@ Options:
   -E, --encoding <name>  The JSON file encoding. (default: "utf-8")
   -N, --prop-name <name> A property name of the schema object. (default: "connectSchema")
   -r, --resource <name>  Specify the resource to connect to. e.g. "work:*" (default: "*")
-  -L, --logger <val>     <level>/<transportaion>. e.g. "warn/popup".  (default: "info/console")
+  -L, --logger <val>     <level>/<transportation>. e.g. "warn/popup".  (default: "info/console")
   -H, --has-result       Show a result(net use) (default: false)
   -R, --dry-run          No execute. Outputs the string of command. (default: false)
   -h, --help             Output usage information
@@ -223,7 +223,7 @@ var schema = {
       }
     }
   }
-}
+};
 
 smbcn.connectSyncUsingSchema(schema, '*', {
   logger: 'info/console',

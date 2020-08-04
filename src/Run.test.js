@@ -216,7 +216,7 @@ describe('Run', function () {
     expect(stdout).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(stdout).toContain(' success Succeeded the connecting!');
 
-    expect(stdout).toContain('Skip the non-availabel resource: work:office');
+    expect(stdout).toContain('Skip the non-available task: work:office');
 
     comp = rsrc['work:labo'].comp;
     share = rsrc['work:labo'].share;
@@ -295,7 +295,7 @@ describe('Run', function () {
     expect(stdout).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(stdout).toContain(' success Succeeded the connecting!');
 
-    expect(stdout).toContain('Skip the non-availabel resource: work:office');
+    expect(stdout).toContain('Skip the non-available task: work:office');
 
     comp = rsrc['work:labo'].comp;
     share = rsrc['work:labo'].share;
@@ -366,7 +366,7 @@ describe('Run', function () {
     expect(stdout).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(stdout).toContain(' success Succeeded the connecting!');
 
-    expect(stdout).toContain('Skip the non-availabel resource: work:office');
+    expect(stdout).toContain('Skip the non-available task: work:office');
 
     comp = rsrc['work:labo'].comp;
     share = rsrc['work:labo'].share;
