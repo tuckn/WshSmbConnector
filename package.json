@@ -1,7 +1,7 @@
 {
   "name": "@tuckn/WshSmbConnector",
   "description": "The WSH (Windows Script Host) CLI that connects to SMB resources according to the schema defined in a JSON file.",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "Tuckn <tuckn333+github@gmail.com>",
   "private": false,
   "license": "MIT",
@@ -63,6 +63,7 @@
     "build": "wsh-packager bundle ./Package.wsf",
     "test:dist:module": ".\\scripts\\Test dist:module",
     "test:dist:bundle": ".\\scripts\\Test dist:bundle",
+    "test:dist:Run": ".\\scripts\\Test dist:Run",
     "test": "run-s test:dist:*",
     "predocs": "rimraf ./docs",
     "docs:common": "jsdoc --configure ./jsdoc.json",

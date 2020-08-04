@@ -37,7 +37,7 @@ Write your connection settings to the JSON file, for example,
 ```json
 {
   "connectSchema": {
-    "resources": {
+    "tasks": {
       "home": {
         "comp": "11.22.33.44",
         "share": "Public",
@@ -65,7 +65,7 @@ You can also define the values into `components` object.
       "myUser": "user1",
       "myPass": null
     },
-    "resources": {
+    "tasks": {
       "home": {
         "comp": "11.22.33.44",
         "share": "Public",
@@ -91,7 +91,7 @@ The values specified as `null` in `components` must be specified CLI arguments.
 ```console
 D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss"
 [2020-08-01T06:50:28] info    query: "*"
-[2020-08-01T06:50:28] info    matched resources: 2
+[2020-08-01T06:50:28] info    matched tasks: 2
 [2020-08-01T06:50:28] info    Start the function smbcn.connectSyncSurelyUsingLog
 [2020-08-01T06:50:28] info    Connecting to "11.22.33.44"
 [2020-08-01T06:50:28] info    shareName: "Public"
@@ -109,12 +109,12 @@ D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss"
 [2020-08-01T06:50:28] info    Finished the function smbcn.connectSyncSurelyUsingLog
 ```
 
-Specify any resources with property names.
+Specify any tasks with property names.
 
 ```console
 D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss" --resource "home"
 [2020-08-01T06:50:28] info    query: "home"
-[2020-08-01T06:50:28] info    matched resources: 1
+[2020-08-01T06:50:28] info    matched tasks: 1
 [2020-08-01T06:50:28] info    Start the function smbcn.connectSyncSurelyUsingLog
 [2020-08-01T06:50:28] info    Connecting to "11.22.33.44"
 [2020-08-01T06:50:28] info    shareName: "Public"
@@ -136,7 +136,7 @@ The command to connect a Windows to resources with the schema
 
 Options:
   -V, --version          Output the version number
-  -D, --dir-path <path>  A configure name. "cwd", "portable", "userProfile", <Directory Path>. Default: "cmd" is "%CD%\.wsh"
+  -D, --dir-path <path>  The path name where the schema JSON is located. <Directory Path> or "cwd", "portable", "userProfile". Default: "cmd" is "%CD%\\.wsh"
   -F, --file-name <name> A JSON file name. (default: "settings.json")
   -E, --encoding <name>  The JSON file encoding. (default: "utf-8")
   -N, --prop-name <name> A property name of the schema object. (default: "connectSchema")
@@ -207,7 +207,7 @@ var schema = {
       myUser: 'user1',
       myPass: null
     },
-    resources: {
+    tasks: {
       home: {
         comp: '11.22.33.44',
         share: 'Public',

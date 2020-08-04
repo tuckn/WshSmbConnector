@@ -1,4 +1,6 @@
 ﻿/* globals Wsh: false */
+/* globals process: false */
+/* globals __dirname: false */
 /* globals __filename: false */
 
 /* globals describe: false */
@@ -6,12 +8,14 @@
 /* globals expect: false */
 
 // Shorthand
+var util = Wsh.Util;
 var path = Wsh.Path;
 var os = Wsh.OS;
 var fs = Wsh.FileSystem;
 var fse = Wsh.FileSystemExtra;
 var child_process = Wsh.ChildProcess;
 
+var includes = util.includes;
 var srr = os.surroundPath;
 var escapeForCmd = os.escapeForCmd;
 var CMD = os.exefiles.cmd;
@@ -19,7 +23,13 @@ var CSCRIPT = os.exefiles.cscript;
 var NET = os.exefiles.net;
 var execSync = child_process.execSync;
 
-var testRun = srr(CSCRIPT) + ' ' + srr(__filename) + ' //nologo //job:test:src:Run';
+var testRun;
+if (includes(process.execArgv, '//job:test:dist:Run')) {
+  testRun = srr(CSCRIPT) + ' ' + srr(path.join(__dirname, 'dist', 'Run.wsf')) + ' //nologo';
+} else {
+  testRun = srr(CSCRIPT) + ' ' + srr(__filename) + ' //nologo //job:test:src:Run';
+}
+
 var _getCmdNetDel = function (comp, share) {
   return 'dry-run [_shRun]: ' + CMD + ' /S /C"'
       + NET + ' use ' + '\\\\' + comp + '\\' + share + ' /delete /yes 1> ';
@@ -133,7 +143,7 @@ describe('Run', function () {
         anyVal1: null, // Overwrites with options.overwrites.anyVal1
         anyVal2: null // Overwrites with options.overwrites.anyVal2
       },
-      resources: {
+      tasks: {
         home: {
           comp: '${homeNasIP}',
           share: '${ipc}',
@@ -184,11 +194,11 @@ describe('Run', function () {
 
     // Shorthands
     var cmp = schema.connectSchema.components;
-    var rsrc = schema.connectSchema.resources;
+    var rsrc = schema.connectSchema.tasks;
     var stdout = retObj.stdout;
     expect(stdout).toContain(' info    Start function smbcn.connectSyncUsingSchema');
     expect(stdout).toContain(' info    query: "*"');
-    expect(stdout).toContain(' info    matched resources: ' + Object.keys(rsrc).length);
+    expect(stdout).toContain(' info    matched tasks: ' + Object.keys(rsrc).length);
 
     comp = cmp.homeNasIP;
     share = cmp.ipc;
@@ -263,11 +273,11 @@ describe('Run', function () {
 
     // Shorthands
     var cmp = schema.connectSchema.components;
-    var rsrc = schema.connectSchema.resources;
+    var rsrc = schema.connectSchema.tasks;
     var stdout = retObj.stdout;
     expect(stdout).toContain(' info    Start function smbcn.connectSyncUsingSchema');
     expect(stdout).toContain(' info    query: "*"');
-    expect(stdout).toContain(' info    matched resources: ' + Object.keys(rsrc).length);
+    expect(stdout).toContain(' info    matched tasks: ' + Object.keys(rsrc).length);
 
     comp = cmp.homeNasIP;
     share = cmp.ipc;
@@ -334,11 +344,11 @@ describe('Run', function () {
 
     // Shorthands
     var cmp = schema.connectSchema.components;
-    var rsrc = schema.connectSchema.resources;
+    var rsrc = schema.connectSchema.tasks;
     var stdout = retObj.stdout;
     expect(stdout).toContain(' info    Start function smbcn.connectSyncUsingSchema');
     expect(stdout).toContain(' info    query: "*"');
-    expect(stdout).toContain(' info    matched resources: ' + Object.keys(rsrc).length);
+    expect(stdout).toContain(' info    matched tasks: ' + Object.keys(rsrc).length);
 
     comp = cmp.homeNasIP;
     share = cmp.ipc;

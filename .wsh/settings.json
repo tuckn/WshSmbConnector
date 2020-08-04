@@ -9,7 +9,7 @@
             "anyVal1": null,
             "anyVal2": null
         },
-        "resources": {
+        "tasks": {
             "home": {
                 "comp": "${homeNasIP}",
                 "share": "${ipc}",

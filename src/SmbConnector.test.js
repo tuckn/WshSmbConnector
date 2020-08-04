@@ -99,7 +99,7 @@ describe('SmbConnector', function () {
       anyVal1: null, // Overwrites with options.overwrites.anyVal1
       anyVal2: null // Overwrites with options.overwrites.anyVal2
     },
-    resources: {
+    tasks: {
       home: {
         comp: '${homeNasIP}',
         share: '${ipc}',
@@ -159,7 +159,7 @@ describe('SmbConnector', function () {
     comp = schema.components.homeNasIP;
     share = schema.components.ipc;
     domain = '';
-    user = schema.resources.home.user;
+    user = schema.tasks.home.user;
     pwd = 'null';
     expect(logStr).toContain(' info    Connecting to "' + comp + '"');
     expect(logStr).toContain(' info    shareName: "' + share + '"');
@@ -170,7 +170,7 @@ describe('SmbConnector', function () {
     expect(logStr).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(logStr).toContain(' success Succeeded the connecting!');
 
-    comp = schema.resources['work:office'].comp;
+    comp = schema.tasks['work:office'].comp;
     share = schema.components.ipc;
     domain = schema.components.workNetDomain;
     user = schema.components.workUsername;
@@ -179,9 +179,9 @@ describe('SmbConnector', function () {
     expect(logStr).not.toContain(_getCmdNetDel(comp, share));
     expect(logStr).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
 
-    comp = schema.resources['work:labo'].comp;
-    share = schema.resources['work:labo'].share;
-    domain = schema.resources['work:labo'].domain;
+    comp = schema.tasks['work:labo'].comp;
+    share = schema.tasks['work:labo'].share;
+    domain = schema.tasks['work:labo'].domain;
     user = schema.components.workUsername;
     pwd = 'null';
     expect(logStr).toContain(' info    Connecting to "' + comp + '"');
@@ -235,7 +235,7 @@ describe('SmbConnector', function () {
     comp = schema.components.homeNasIP;
     share = schema.components.ipc;
     domain = '';
-    user = schema.resources.home.user;
+    user = schema.tasks.home.user;
     pwd = anyVal1;
     expect(logStr).toContain(' info    Connecting to "' + comp + '"');
     expect(logStr).toContain(' info    shareName: "' + share + '"');
@@ -246,7 +246,7 @@ describe('SmbConnector', function () {
     expect(logStr).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
     expect(logStr).toContain(' success Succeeded the connecting!');
 
-    comp = schema.resources['work:office'].comp;
+    comp = schema.tasks['work:office'].comp;
     share = schema.components.ipc;
     domain = schema.components.workNetDomain;
     user = schema.components.workUsername;
@@ -255,9 +255,9 @@ describe('SmbConnector', function () {
     expect(logStr).not.toContain(_getCmdNetDel(comp, share));
     expect(logStr).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
 
-    comp = schema.resources['work:labo'].comp;
-    share = schema.resources['work:labo'].share;
-    domain = schema.resources['work:labo'].domain;
+    comp = schema.tasks['work:labo'].comp;
+    share = schema.tasks['work:labo'].share;
+    domain = schema.tasks['work:labo'].domain;
     user = schema.components.workUsername;
     pwd = 'null';
     expect(logStr).not.toContain(' info    Connecting to "' + comp + '"');

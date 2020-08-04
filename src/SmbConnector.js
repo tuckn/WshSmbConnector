@@ -119,7 +119,7 @@
   /**
    * @typedef {object} typeNetSmbConnectSchema
    * @property {object} components
-   * @property {...typeNetSmbConnectSchemaResource} resources
+   * @property {...typeNetSmbConnectSchemaResource} tasks
    */
 
   /**
@@ -147,7 +147,7 @@
    *     anyVal1: null, // Overwrites with options.overwrites.anyVal1
    *     anyVal2: null // Overwrites with options.overwrites.anyVal2
    *   },
-   *   resources: {
+   *   tasks: {
    *     home: {
    *       comp: '${homeNasIP}',
    *       share: '${ipc}',
@@ -202,7 +202,7 @@
     lggr.info('Start function ' + FN);
     lggr.info('query: "' + query + '"');
 
-    var rsrcNames = Object.keys(schema.resources);
+    var rsrcNames = Object.keys(schema.tasks);
     var regNameMatcher;
     if (includes(query, '*')) {
       regNameMatcher = new RegExp(query.replace(/\*/g, '.*'));
@@ -212,7 +212,7 @@
     var filterdNames = rsrcNames.filter(function (rsrcName) {
       return regNameMatcher.test(rsrcName);
     });
-    lggr.info('matched resources: ' + filterdNames.length);
+    lggr.info('matched tasks: ' + filterdNames.length);
 
     var vals = schema.components; // Shorthand
 
@@ -230,7 +230,7 @@
       });
     }
 
-    var rsrcs = schema.resources; // Shorthand
+    var rsrcs = schema.tasks; // Shorthand
 
     var isDryRun = obtain(options, 'isDryRun', false);
     if (isDryRun) lggr.info('dry-run [' + FN + ']:');

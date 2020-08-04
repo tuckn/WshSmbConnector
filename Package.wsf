@@ -48,4 +48,9 @@
     <script language="JScript" src="./WshModules/WshJest/dist/app.js"></script>
     <script language="JScript" src="./src/SmbConnector.test.js"></script>
   </job>
+  <job id = "test:dist:Run">
+    <script language="JScript" src="./WshModules/WshBasicPackage/dist/bundle.js"></script>
+    <script language="JScript" src="./WshModules/WshJest/dist/app.js"></script>
+    <script language="JScript" src="./src/Run.test.js"></script>
+  </job>
 </package>
