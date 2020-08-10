@@ -1,5 +1,4 @@
 ﻿/* globals Wsh: false */
-/* globals process: false */
 
 /* globals describe: false */
 /* globals test: false */

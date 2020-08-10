@@ -197,10 +197,28 @@ I recommend this .wsf file encoding to be UTF-8 [BOM, CRLF].
 
 Now _.\\MyScript.js_ (JScript ) can use `Wsh.SmbConnector`.
 
+Connecting and logging
+
 ```js
 var smbcn = Wsh.SmbConnector; // Shorthand
 
-// Schema Connect
+var comp = '11.22.33.44';
+var share = 'public';
+var domain = 'PCNAME';
+var user = 'UserId';
+var pwd = 'My * P@ss><';
+
+smbcn.connectSyncSurelyUsingLog(comp, share, domain, user, pwd, {
+  logger: 'warn/winEvent', // See https://github.com/tuckn/WshLogger
+  showsResult: true
+});
+```
+
+Schema Connecting
+
+```js
+var smbcn = Wsh.SmbConnector; // Shorthand
+
 var schema = {
   connectSchema: {
     components: {
@@ -229,18 +247,6 @@ smbcn.connectSyncUsingSchema(schema, '*', {
   logger: 'info/console',
   overwrites: { myPass: 'user p@ss' },
   isDryRun: true
-});
-
-// Connect
-var comp = '11.22.33.44';
-var share = 'public';
-var domain = 'PCNAME';
-var user = 'UserId';
-var pwd = 'My * P@ss><';
-
-smbcn.connectSyncSurelyUsingLog(comp, share, domain, user, pwd, {
-  logger: 'warn/winEvent', // See https://github.com/tuckn/WshLogger
-  showsResult: true
 });
 ```
 

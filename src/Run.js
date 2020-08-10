@@ -19,7 +19,7 @@ var isSolidArray = util.isSolidArray;
 
 // connect {{{
 /**
- * Connets the specifying resource.
+ * Connects the specifying resource.
  *
  * @example
  * Usage: connect <compName> [options]
@@ -74,7 +74,7 @@ cli.addProgram({
 
 // disconnect {{{
 /**
- * Disconnets the specifying resource.
+ * Disconnects the specifying resource.
  *
  * @example
  * Usage: disconnect [compName] [options]
@@ -118,7 +118,7 @@ cli.addProgram({
 
 // schemaConnect {{{
 /**
- * Connets the resources defined on a schema.
+ * Connects the resources defined on a schema.
  *
  * @example
  * Usage: schemaConnect [overwriteKey:val...] [options]

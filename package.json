@@ -1,7 +1,7 @@
 {
   "name": "@tuckn/WshSmbConnector",
   "description": "The WSH (Windows Script Host) CLI that connects to SMB resources according to the schema defined in a JSON file.",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "Tuckn <tuckn333+github@gmail.com>",
   "private": false,
   "license": "MIT",
@@ -70,7 +70,8 @@
     "cp-docs-css": "cpy ./assets/styles/jsdoc.css ./docs/styles/",
     "cp-docs-img": "cpy ./assets/img/**/* ./docs/img/",
     "postdocs": "run-p cp-docs-*",
-    "docs": "run-s docs:*"
+    "docs": "run-s docs:*",
+    "up-build-doc": "run-s updateModules build docs"
   },
   "husky": {
     "hooks": {

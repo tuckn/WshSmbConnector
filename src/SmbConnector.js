@@ -21,7 +21,8 @@
   var objAdd = Object.assign;
   var insp = util.inspect;
   var obtain = util.obtainPropVal;
-  var tmpParser = util.parseTemplateLiteral;
+  var parseTmp = util.parseTemplateLiteral;
+  var parseDate = util.parseDateLiteral;
   var hasContent = util.hasContent;
   var includes = util.includes;
   var isSolidString = util.isSolidString;
@@ -241,11 +242,11 @@
         return;
       }
 
-      var comp = tmpParser(rsrcs[rsrcName].comp || '', vals);
-      var share = tmpParser(rsrcs[rsrcName].share || '', vals);
-      var domain = tmpParser(rsrcs[rsrcName].domain || '', vals);
-      var user = tmpParser(rsrcs[rsrcName].user || '', vals);
-      var pwd = tmpParser(rsrcs[rsrcName].pwd || '', vals);
+      var comp = parseDate(parseTmp(rsrcs[rsrcName].comp || '', vals));
+      var share = parseDate(parseTmp(rsrcs[rsrcName].share || '', vals));
+      var domain = parseDate(parseTmp(rsrcs[rsrcName].domain || '', vals));
+      var user = parseDate(parseTmp(rsrcs[rsrcName].user || '', vals));
+      var pwd = parseDate(parseTmp(rsrcs[rsrcName].pwd || '', vals));
 
       try {
         smbcn.connectSyncSurelyUsingLog(
