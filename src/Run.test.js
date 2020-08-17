@@ -197,7 +197,7 @@ describe('Run', function () {
     var rsrc = schema.connectSchema.tasks;
     var stdout = retObj.stdout;
     expect(stdout).toContain(' info    Start function smbcn.connectSyncUsingSchema');
-    expect(stdout).toContain(' info    query: "*"');
+    expect(stdout).toContain(' info    taskName: "*"');
     expect(stdout).toContain(' info    matched tasks: ' + Object.keys(rsrc).length);
 
     comp = cmp.homeNasIP;
@@ -276,7 +276,7 @@ describe('Run', function () {
     var rsrc = schema.connectSchema.tasks;
     var stdout = retObj.stdout;
     expect(stdout).toContain(' info    Start function smbcn.connectSyncUsingSchema');
-    expect(stdout).toContain(' info    query: "*"');
+    expect(stdout).toContain(' info    taskName: "*"');
     expect(stdout).toContain(' info    matched tasks: ' + Object.keys(rsrc).length);
 
     comp = cmp.homeNasIP;
@@ -347,7 +347,7 @@ describe('Run', function () {
     var rsrc = schema.connectSchema.tasks;
     var stdout = retObj.stdout;
     expect(stdout).toContain(' info    Start function smbcn.connectSyncUsingSchema');
-    expect(stdout).toContain(' info    query: "*"');
+    expect(stdout).toContain(' info    taskName: "*"');
     expect(stdout).toContain(' info    matched tasks: ' + Object.keys(rsrc).length);
 
     comp = cmp.homeNasIP;

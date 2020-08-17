@@ -90,7 +90,7 @@ The values specified as `null` in `components` must be specified CLI arguments.
 
 ```console
 D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss"
-[2020-08-01T06:50:28] info    query: "*"
+[2020-08-01T06:50:28] info    taskName: "*"
 [2020-08-01T06:50:28] info    matched tasks: 2
 [2020-08-01T06:50:28] info    Start the function smbcn.connectSyncSurelyUsingLog
 [2020-08-01T06:50:28] info    Connecting to "11.22.33.44"
@@ -112,8 +112,8 @@ D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss"
 Specify any tasks with property names.
 
 ```console
-D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss" --resource "home"
-[2020-08-01T06:50:28] info    query: "home"
+D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss" --task "home"
+[2020-08-01T06:50:28] info    taskName: "home"
 [2020-08-01T06:50:28] info    matched tasks: 1
 [2020-08-01T06:50:28] info    Start the function smbcn.connectSyncSurelyUsingLog
 [2020-08-01T06:50:28] info    Connecting to "11.22.33.44"
@@ -140,7 +140,7 @@ Options:
   -F, --file-name <name> A JSON file name. (default: "settings.json")
   -E, --encoding <name>  The JSON file encoding. (default: "utf-8")
   -N, --prop-name <name> A property name of the schema object. (default: "connectSchema")
-  -r, --resource <name>  Specify the resource to connect to. e.g. "work:*" (default: "*")
+  -T, --task <name>  Specify the task name to connect to. e.g. "work:*" (default: "*")
   -L, --logger <val>     <level>/<transportation>. e.g. "warn/popup".  (default: "info/console")
   -H, --has-result       Show a result(net use) (default: false)
   -R, --dry-run          No execute. Outputs the string of command. (default: false)

@@ -47,7 +47,7 @@
 
   // smbcn.connectSyncSurelyUsingLog {{{
   /**
-   * Connects the comp to a share resource
+   * Connects the Windows to the shared resource
    *
    * @example
    * var smbcn = Wsh.SmbConnector; // Shorthand
@@ -120,13 +120,13 @@
   /**
    * @typedef {object} typeNetSmbConnectSchema
    * @property {object} components
-   * @property {...typeNetSmbConnectSchemaResource} tasks
+   * @property {...typeNetSmbConnectSchemaTask} tasks
    */
 
   /**
-   * @typedef {object} typeNetSmbConnectSchemaResource
+   * @typedef {object} typeNetSmbConnectSchemaTask
    * @property {string} description
-   * @property {boolean} [available=true] - If specifying false, Skips the resource.
+   * @property {boolean} [available=true] - If specifying false, Skips the task.
    * @property {string} comp - The computer name or IP address.
    * @property {string} [share='IPC$'] - The share name.
    * @property {string} [domain] - The domain name. If it is empty, uses the current logged on domain.
@@ -135,7 +135,7 @@
    */
 
   /**
-   * Connects the Windows to a share resource
+   * Connects the Windows to the shared resources
    *
    * @example
    * var smbcn = Wsh.SmbConnector; // Shorthand
@@ -185,33 +185,33 @@
    * @function connectSyncUsingSchema
    * @memberof Wsh.SmbConnector
    * @param {typeNetSmbConnectSchema} schema
-   * @param {string} [query] - The resource name to connect
+   * @param {string} [taskName] - The task name to connect
    * @param {object} [options] - Optional parameters.
    * @param {object} [options.overwrites] - Ex. { anyVal1: 'myP@ss', anyVal2: 'p_w_d' }
    * @param {(string|Object)} [options.logger] - See options of {@link Wsh.Logger.create}
-   * @param {boolean} [options.showsResult=false] - The share name of the resource
+   * @param {boolean} [options.showsResult=false] - Shows the current session after connecting.
    * @param {boolean} [options.isDryRun=false] - No execute, returns the string of command.
    * @returns {void|string} - If options.isDryRun is true, returns string.
    */
-  smbcn.connectSyncUsingSchema = function (schema, query, options) {
+  smbcn.connectSyncUsingSchema = function (schema, taskName, options) {
     var FN = 'smbcn.connectSyncUsingSchema';
     if (!isPlainObject(schema)) throwErrNonObject(FN, schema);
-    if (!isSolidString(query)) throwErrNonStr(FN, query);
+    if (!isSolidString(taskName)) throwErrNonStr(FN, taskName);
 
     var loggerObj = obtain(options, 'logger', {});
     var lggr = logger.create(loggerObj);
     lggr.info('Start function ' + FN);
-    lggr.info('query: "' + query + '"');
+    lggr.info('taskName: "' + taskName + '"');
 
-    var rsrcNames = Object.keys(schema.tasks);
+    var taskNames = Object.keys(schema.tasks);
     var regNameMatcher;
-    if (includes(query, '*')) {
-      regNameMatcher = new RegExp(query.replace(/\*/g, '.*'));
+    if (includes(taskName, '*')) {
+      regNameMatcher = new RegExp(taskName.replace(/\*/g, '.*'));
     } else {
-      regNameMatcher = new RegExp(query);
+      regNameMatcher = new RegExp(taskName);
     }
-    var filteredNames = rsrcNames.filter(function (rsrcName) {
-      return regNameMatcher.test(rsrcName);
+    var filteredNames = taskNames.filter(function (taskName) {
+      return regNameMatcher.test(taskName);
     });
     lggr.info('matched tasks: ' + filteredNames.length);
 
@@ -231,22 +231,22 @@
       });
     }
 
-    var rsrcs = schema.tasks; // Shorthand
+    var tasks = schema.tasks; // Shorthand
 
     var isDryRun = obtain(options, 'isDryRun', false);
     if (isDryRun) lggr.info('dry-run [' + FN + ']:');
 
-    filteredNames.forEach(function (rsrcName) {
-      if (rsrcs[rsrcName].available === false) {
-        lggr.info('Skip the non-available task: ' + rsrcName);
+    filteredNames.forEach(function (taskName) {
+      if (tasks[taskName].available === false) {
+        lggr.info('Skip the non-available task: ' + taskName);
         return;
       }
 
-      var comp = parseDate(parseTmp(rsrcs[rsrcName].comp || '', vals));
-      var share = parseDate(parseTmp(rsrcs[rsrcName].share || '', vals));
-      var domain = parseDate(parseTmp(rsrcs[rsrcName].domain || '', vals));
-      var user = parseDate(parseTmp(rsrcs[rsrcName].user || '', vals));
-      var pwd = parseDate(parseTmp(rsrcs[rsrcName].pwd || '', vals));
+      var comp = parseDate(parseTmp(tasks[taskName].comp || '', vals));
+      var share = parseDate(parseTmp(tasks[taskName].share || '', vals));
+      var domain = parseDate(parseTmp(tasks[taskName].domain || '', vals));
+      var user = parseDate(parseTmp(tasks[taskName].user || '', vals));
+      var pwd = parseDate(parseTmp(tasks[taskName].pwd || '', vals));
 
       try {
         smbcn.connectSyncSurelyUsingLog(

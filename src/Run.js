@@ -131,7 +131,7 @@ cli.addProgram({
  *   -F, --file-name <name> A JSON file name. (default: "settings.json")
  *   -E, --encoding <name>  The JSON file encoding. (default: "utf-8")
  *   -N, --prop-name <name> A property name of the schema object. (default: "connectSchema")
- *   -r, --resource <name>  Specify the resource to connect to. e.g. "work:*" (default: "*")
+ *   -T, --task <name>  Specify the task name to connect to. e.g. "work:*" (default: "*")
  *   -L, --logger <val>     <level>/<transportation>. e.g. "warn/popup".  (default: "info/console")
  *   -H, --has-result       Show a result(net use) (default: false)
  *   -R, --dry-run          No execute. Outputs the string of command. (default: false)
@@ -148,7 +148,7 @@ cli.addProgram({
     ['-F, --file-name <name>', 'A JSON file name.', 'settings.json'],
     ['-E, --encoding <name>', 'The JSON file encoding.', CD.ado.charset.utf8],
     ['-N, --prop-name <name>', 'A property name of the schema object.', 'connectSchema'],
-    ['-r, --resource <name>', 'Specify the resource to connect to. e.g. "work:*"', '*'],
+    ['-T, --task <name>', 'Specify the task name to connect to. e.g. "work:*"', '*'],
     ['-L, --logger <val>', '<level>/<transportation>. e.g. "warn/popup". ', 'info/console'],
     ['-H, --has-result', 'Show a result(net use)'],
     ['-R, --dry-run', 'No execute. Outputs the string of command.']
@@ -168,7 +168,7 @@ cli.addProgram({
     });
     var schema = conf.get(opt.propName);
 
-    var retVal = smbcn.connectSyncUsingSchema(schema, opt.resource, {
+    var retVal = smbcn.connectSyncUsingSchema(schema, opt.task, {
       overwrites: overwritesObj,
       logger: opt.logger,
       showsResult: opt.hasResult,

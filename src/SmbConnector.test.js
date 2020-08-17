@@ -146,7 +146,7 @@ describe('SmbConnector', function () {
     // console.log(logStr);
 
     expect(logStr).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
-    expect(logStr).toContain(' info    query: "*"');
+    expect(logStr).toContain(' info    taskName: "*"');
 
     expect(logStr).toContain('dry-run [smbcn.connectSyncUsingSchema]:');
     expect(logStr).toContain('dry-run [smbcn.connectSyncSurelyUsingLog]:');
@@ -223,7 +223,7 @@ describe('SmbConnector', function () {
     // console.log(logStr);
 
     expect(logStr).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
-    expect(logStr).toContain(' info    query: "home"');
+    expect(logStr).toContain(' info    taskName: "home"');
 
     expect(logStr).toContain('dry-run [smbcn.connectSyncUsingSchema]:');
     expect(logStr).toContain('dry-run [smbcn.connectSyncSurelyUsingLog]:');
