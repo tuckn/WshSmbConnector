@@ -62,8 +62,6 @@ describe('Run', function () {
     var domain = 'PCNAME';
     var user = 'UserId';
     var pwd = 'My * P@ss><';
-    var retObj;
-    var stdout;
 
     var args = [
       'connect', comp,
@@ -73,27 +71,26 @@ describe('Run', function () {
       '-P', '"' + pwd + '"',
       '-R'
     ];
-    retObj = execSync(testRun + ' ' + args.join(' '));
+    var retObj = execSync(testRun + ' ' + args.join(' '));
     // console.dir(retObj);
     expect(retObj.error).toBeFalsy();
     expect(retObj.stderr).toBe('');
 
-    stdout = retObj.stdout;
+    var expC = expect(retObj.stdout).toContain; // Shorthand
+    expC('Start the function smbcn.connectSyncSurelyUsingLog');
+    expC('Connecting to "' + comp + '"');
+    expC('shareName: "' + share + '"');
+    expC('domain: "' + domain + '", user: "' + user + '"');
+    expC('password: "****"');
+    expC('throws: false');
+    expC('Succeeded the connecting!');
+    expC('Finished the function smbcn.connectSyncSurelyUsingLog');
 
-    expect(stdout).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
-    expect(stdout).toContain(' info    Connecting to "' + comp + '"');
-    expect(stdout).toContain(' info    shareName: "' + share + '"');
-    expect(stdout).toContain(' info    domain: "' + domain + '", user: "' + user + '"');
-    expect(stdout).toContain(' info    password: "****"');
-    expect(stdout).toContain(' info    throws: false');
-    expect(stdout).toContain(' success Succeeded the connecting!');
-    expect(stdout).toContain(' info    Finished the function smbcn.connectSyncSurelyUsingLog');
-
-    expect(stdout).toContain('dry-run [smbcn.connectSyncSurelyUsingLog]: ');
-    expect(stdout).toContain('dry-run [net.SMB.connectSyncSurely]: ');
-    expect(stdout).toContain('dry-run [net.SMB.disconnectSync]: ');
-    expect(stdout).toContain(_getCmdNetDel(comp, share));
-    expect(stdout).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
+    expC('dry-run [smbcn.connectSyncSurelyUsingLog]: ');
+    expC('dry-run [net.SMB.connectSyncSurely]: ');
+    expC('dry-run [net.SMB.disconnectSync]: ');
+    expC(_getCmdNetDel(comp, share));
+    expC(_getCmdNetCn(comp, share, domain, user, pwd));
   });
 
   testName = 'disconnect_help';
@@ -186,56 +183,57 @@ describe('Run', function () {
     expect(retObj.error).toBeFalsy();
     expect(retObj.stderr).toBe('');
 
-    var comp;
-    var share;
-    var domain;
-    var user;
-    var pwd;
-
     // Shorthands
     var cmp = schema.connectSchema.components;
     var rsrc = schema.connectSchema.tasks;
-    var stdout = retObj.stdout;
-    expect(stdout).toContain(' info    Start function smbcn.connectSyncUsingSchema');
-    expect(stdout).toContain(' info    taskName: "*"');
-    expect(stdout).toContain(' info    matched tasks: ' + Object.keys(rsrc).length);
+    var expC = expect(retObj.stdout).toContain;
 
-    comp = cmp.homeNasIP;
-    share = cmp.ipc;
-    user = rsrc.home.user;
-    domain = '';
-    pwd = 'null';
+    expC('Start function smbcn.connectSyncUsingSchema');
+    expC('taskName: "*"');
+    expC('matched tasks: ' + Object.keys(rsrc).length);
+    expC('Start the function smbcn.connectSyncSurelyUsingLog');
 
-    expect(stdout).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
-    expect(stdout).toContain(' info    Connecting to "' + comp + '"');
-    expect(stdout).toContain(' info    shareName: "' + share + '"');
-    expect(stdout).toContain(' info    domain: "", user: "' + user + '"');
-    expect(stdout).toContain(' info    password: "****"');
-    expect(stdout).toContain(' info    throws: false');
-    expect(stdout).toContain(_getCmdNetDel(comp, share));
-    expect(stdout).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
-    expect(stdout).toContain(' success Succeeded the connecting!');
+    (function () {
+      var comp = cmp.homeNasIP;
+      var share = cmp.ipc;
+      var user = rsrc.home.user;
+      var domain = '';
+      var pwd = 'null';
+      expC('Start the task: home');
+      expC('Connecting to "' + comp + '"');
+      expC('shareName: "' + share + '"');
+      expC('domain: "", user: "' + user + '"');
+      expC('password: "****"');
+      expC('throws: false');
+      expC(_getCmdNetDel(comp, share));
+      expC(_getCmdNetCn(comp, share, domain, user, pwd));
+      expC(' success Succeeded the connecting!');
+    })();
 
-    expect(stdout).toContain('Skip the non-available task: work:office');
+    (function () {
+      expC('Start the task: work:office');
+      expC('available: false => Skip this task');
+    })();
 
-    comp = rsrc['work:labo'].comp;
-    share = rsrc['work:labo'].share;
-    user = cmp.workUsername;
-    domain = rsrc['work:labo'].domain;
-    pwd = 'null';
+    (function () {
+      var comp = rsrc['work:labo'].comp;
+      var share = rsrc['work:labo'].share;
+      var user = cmp.workUsername;
+      var domain = rsrc['work:labo'].domain;
+      var pwd = 'null';
+      expC('Start the task: work:labo');
+      expC('Connecting to "' + comp + '"');
+      expC('shareName: "' + share + '"');
+      expC('domain: "' + domain + '", user: "' + user + '"');
+      expC('password: "****"');
+      expC('throws: false');
+      expC(_getCmdNetDel(comp, share));
+      expC(_getCmdNetCn(comp, share, domain, user, pwd));
+      expC('Succeeded the connecting!');
+    })();
 
-    expect(stdout).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
-    expect(stdout).toContain(' info    Connecting to "' + comp + '"');
-    expect(stdout).toContain(' info    shareName: "' + share + '"');
-    expect(stdout).toContain(' info    domain: "' + domain + '", user: "' + user + '"');
-    expect(stdout).toContain(' info    password: "****"');
-    expect(stdout).toContain(' info    throws: false');
-    expect(stdout).toContain(_getCmdNetDel(comp, share));
-    expect(stdout).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
-    expect(stdout).toContain(' success Succeeded the connecting!');
-
-    expect(stdout).toContain('info    Finished the function smbcn.connectSyncSurelyUsingLog');
-    expect(stdout).toContain('info    Finished function smbcn.connectSyncUsingSchema');
+    expC('Finished the function smbcn.connectSyncSurelyUsingLog');
+    expC('Finished function smbcn.connectSyncUsingSchema');
 
     // Cleans
     fse.removeSync(tmpDir);
@@ -265,56 +263,57 @@ describe('Run', function () {
     expect(retObj.error).toBeFalsy();
     expect(retObj.stderr).toBe('');
 
-    var comp;
-    var share;
-    var domain;
-    var user;
-    var pwd;
-
     // Shorthands
     var cmp = schema.connectSchema.components;
     var rsrc = schema.connectSchema.tasks;
-    var stdout = retObj.stdout;
-    expect(stdout).toContain(' info    Start function smbcn.connectSyncUsingSchema');
-    expect(stdout).toContain(' info    taskName: "*"');
-    expect(stdout).toContain(' info    matched tasks: ' + Object.keys(rsrc).length);
+    var expC = expect(retObj.stdout).toContain;
 
-    comp = cmp.homeNasIP;
-    share = cmp.ipc;
-    user = rsrc.home.user;
-    domain = '';
-    pwd = anyVal1;
+    expC('Start function smbcn.connectSyncUsingSchema');
+    expC('taskName: "*"');
+    expC('matched tasks: ' + Object.keys(rsrc).length);
+    expC('Start the function smbcn.connectSyncSurelyUsingLog');
 
-    expect(stdout).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
-    expect(stdout).toContain(' info    Connecting to "' + comp + '"');
-    expect(stdout).toContain(' info    shareName: "' + share + '"');
-    expect(stdout).toContain(' info    domain: "", user: "' + user + '"');
-    expect(stdout).toContain(' info    password: "****"');
-    expect(stdout).toContain(' info    throws: false');
-    expect(stdout).toContain(_getCmdNetDel(comp, share));
-    expect(stdout).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
-    expect(stdout).toContain(' success Succeeded the connecting!');
+    (function () {
+      var comp = cmp.homeNasIP;
+      var share = cmp.ipc;
+      var user = rsrc.home.user;
+      var domain = '';
+      var pwd = anyVal1;
+      expC('Start the task: home');
+      expC('Connecting to "' + comp + '"');
+      expC('shareName: "' + share + '"');
+      expC('domain: "", user: "' + user + '"');
+      expC('password: "****"');
+      expC('throws: false');
+      expC(_getCmdNetDel(comp, share));
+      expC(_getCmdNetCn(comp, share, domain, user, pwd));
+      expC('Succeeded the connecting!');
+    })();
 
-    expect(stdout).toContain('Skip the non-available task: work:office');
+    (function () {
+      expC('Start the task: work:office');
+      expC('available: false => Skip this task');
+    })();
 
-    comp = rsrc['work:labo'].comp;
-    share = rsrc['work:labo'].share;
-    user = cmp.workUsername;
-    domain = rsrc['work:labo'].domain;
-    pwd = anyVal2;
+    (function () {
+      var comp = rsrc['work:labo'].comp;
+      var share = rsrc['work:labo'].share;
+      var user = cmp.workUsername;
+      var domain = rsrc['work:labo'].domain;
+      var pwd = anyVal2;
+      expC('Start the task: work:labo');
+      expC('Connecting to "' + comp + '"');
+      expC('shareName: "' + share + '"');
+      expC('domain: "' + domain + '", user: "' + user + '"');
+      expC('password: "****"');
+      expC('throws: false');
+      expC(_getCmdNetDel(comp, share));
+      expC(_getCmdNetCn(comp, share, domain, user, pwd));
+      expC('Succeeded the connecting!');
+    })();
 
-    expect(stdout).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
-    expect(stdout).toContain(' info    Connecting to "' + comp + '"');
-    expect(stdout).toContain(' info    shareName: "' + share + '"');
-    expect(stdout).toContain(' info    domain: "' + domain + '", user: "' + user + '"');
-    expect(stdout).toContain(' info    password: "****"');
-    expect(stdout).toContain(' info    throws: false');
-    expect(stdout).toContain(_getCmdNetDel(comp, share));
-    expect(stdout).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
-    expect(stdout).toContain(' success Succeeded the connecting!');
-
-    expect(stdout).toContain('info    Finished the function smbcn.connectSyncSurelyUsingLog');
-    expect(stdout).toContain('info    Finished function smbcn.connectSyncUsingSchema');
+    expC('Finished the function smbcn.connectSyncSurelyUsingLog');
+    expC('Finished function smbcn.connectSyncUsingSchema');
 
     // Cleans
     fse.removeSync(tmpDir);
@@ -336,55 +335,56 @@ describe('Run', function () {
     expect(retObj.error).toBeFalsy();
     expect(retObj.stderr).toBe('');
 
-    var comp;
-    var share;
-    var domain;
-    var user;
-    var pwd;
-
     // Shorthands
     var cmp = schema.connectSchema.components;
     var rsrc = schema.connectSchema.tasks;
-    var stdout = retObj.stdout;
-    expect(stdout).toContain(' info    Start function smbcn.connectSyncUsingSchema');
-    expect(stdout).toContain(' info    taskName: "*"');
-    expect(stdout).toContain(' info    matched tasks: ' + Object.keys(rsrc).length);
+    var expC = expect(retObj.stdout).toContain;
 
-    comp = cmp.homeNasIP;
-    share = cmp.ipc;
-    user = rsrc.home.user;
-    domain = '';
-    pwd = anyVal1;
+    expC('Start function smbcn.connectSyncUsingSchema');
+    expC('taskName: "*"');
+    expC('matched tasks: ' + Object.keys(rsrc).length);
+    expC('Start the function smbcn.connectSyncSurelyUsingLog');
 
-    expect(stdout).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
-    expect(stdout).toContain(' info    Connecting to "' + comp + '"');
-    expect(stdout).toContain(' info    shareName: "' + share + '"');
-    expect(stdout).toContain(' info    domain: "", user: "' + user + '"');
-    expect(stdout).toContain(' info    password: "****"');
-    expect(stdout).toContain(' info    throws: false');
-    expect(stdout).toContain(_getCmdNetDel(comp, share));
-    expect(stdout).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
-    expect(stdout).toContain(' success Succeeded the connecting!');
+    (function () {
+      var comp = cmp.homeNasIP;
+      var share = cmp.ipc;
+      var user = rsrc.home.user;
+      var domain = '';
+      var pwd = anyVal1;
+      expC('Start the task: home');
+      expC('Connecting to "' + comp + '"');
+      expC('shareName: "' + share + '"');
+      expC('domain: "", user: "' + user + '"');
+      expC('password: "****"');
+      expC('throws: false');
+      expC(_getCmdNetDel(comp, share));
+      expC(_getCmdNetCn(comp, share, domain, user, pwd));
+      expC('Succeeded the connecting!');
+    })();
 
-    expect(stdout).toContain('Skip the non-available task: work:office');
+    (function () {
+      expC('Start the task: work:office');
+      expC('available: false => Skip this task');
+    })();
 
-    comp = rsrc['work:labo'].comp;
-    share = rsrc['work:labo'].share;
-    user = cmp.workUsername;
-    domain = rsrc['work:labo'].domain;
-    pwd = anyVal2;
+    (function () {
+      var comp = rsrc['work:labo'].comp;
+      var share = rsrc['work:labo'].share;
+      var user = cmp.workUsername;
+      var domain = rsrc['work:labo'].domain;
+      var pwd = anyVal2;
+      expC('Start the task: work:labo');
+      expC('Connecting to "' + comp + '"');
+      expC('shareName: "' + share + '"');
+      expC('domain: "' + domain + '", user: "' + user + '"');
+      expC('password: "****"');
+      expC('throws: false');
+      expC(_getCmdNetDel(comp, share));
+      expC(_getCmdNetCn(comp, share, domain, user, pwd));
+      expC('success Succeeded the connecting!');
+    })();
 
-    expect(stdout).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
-    expect(stdout).toContain(' info    Connecting to "' + comp + '"');
-    expect(stdout).toContain(' info    shareName: "' + share + '"');
-    expect(stdout).toContain(' info    domain: "' + domain + '", user: "' + user + '"');
-    expect(stdout).toContain(' info    password: "****"');
-    expect(stdout).toContain(' info    throws: false');
-    expect(stdout).toContain(_getCmdNetDel(comp, share));
-    expect(stdout).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
-    expect(stdout).toContain(' success Succeeded the connecting!');
-
-    expect(stdout).toContain('info    Finished the function smbcn.connectSyncSurelyUsingLog');
-    expect(stdout).toContain('info    Finished function smbcn.connectSyncUsingSchema');
+    expC('Finished the function smbcn.connectSyncSurelyUsingLog');
+    expC('Finished function smbcn.connectSyncUsingSchema');
   });
 });

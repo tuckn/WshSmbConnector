@@ -93,6 +93,7 @@ D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss"
 [2020-08-01T06:50:28] info    taskName: "*"
 [2020-08-01T06:50:28] info    matched tasks: 2
 [2020-08-01T06:50:28] info    Start the function smbcn.connectSyncSurelyUsingLog
+[2020-08-01T06:50:28] info    Start the task: home
 [2020-08-01T06:50:28] info    Connecting to "11.22.33.44"
 [2020-08-01T06:50:28] info    shareName: "Public"
 [2020-08-01T06:50:28] info    domain: "", user: "user1"
@@ -100,6 +101,7 @@ D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss"
 [2020-08-01T06:50:28] info    throws: false
 [2020-08-01T06:50:28] success Succeeded the connecting!
 [2020-08-01T06:50:28] info    Finished the function smbcn.connectSyncSurelyUsingLog
+[2020-08-01T06:50:28] info    Start the task: office
 [2020-08-01T06:50:28] info    Connecting to "SV12345"
 [2020-08-01T06:50:28] info    shareName: "IPC$"
 [2020-08-01T06:50:28] info    domain: "ID123456", user: "user1"
@@ -116,6 +118,7 @@ D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss" --task "home
 [2020-08-01T06:50:28] info    taskName: "home"
 [2020-08-01T06:50:28] info    matched tasks: 1
 [2020-08-01T06:50:28] info    Start the function smbcn.connectSyncSurelyUsingLog
+[2020-08-01T06:50:28] info    Start the task: home
 [2020-08-01T06:50:28] info    Connecting to "11.22.33.44"
 [2020-08-01T06:50:28] info    shareName: "Public"
 [2020-08-01T06:50:28] info    domain: "", user: "user1"

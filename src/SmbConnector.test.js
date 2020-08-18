@@ -61,23 +61,24 @@ describe('SmbConnector', function () {
 
     var logStr = fs.readFileSync(logFile, { encoding: 'utf8' });
     // console.log(logStr);
-    expect(logStr).toContain('dry-run [smbcn.connectSyncSurelyUsingLog]: ');
-    expect(logStr).toContain('dry-run [net.SMB.connectSyncSurely]: ');
-    expect(logStr).toContain('dry-run [net.SMB.disconnectSync]: ');
-    expect(logStr).toContain('dry-run [_shRun]: ' + CMD + ' /S /C"'
+    var expC = expect(logStr).toContain; // Shorthand
+    expC('dry-run [smbcn.connectSyncSurelyUsingLog]: ');
+    expC('dry-run [net.SMB.connectSyncSurely]: ');
+    expC('dry-run [net.SMB.disconnectSync]: ');
+    expC('dry-run [_shRun]: ' + CMD + ' /S /C"'
       + NET + ' use ' + '\\\\' + comp + '\\' + shareName + ' /delete /yes 1> ');
-    expect(logStr).toContain('dry-run [_shRun]: ' + CMD + ' /S /C"'
+    expC('dry-run [_shRun]: ' + CMD + ' /S /C"'
       + NET + ' use ' + '\\\\' + comp + '\\' + shareName
       + ' ' + pwd + ' /user:' + domain + '\\' + user + ' /persistent:no 1> ');
 
-    expect(logStr).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
-    expect(logStr).toContain(' info    Connecting to "' + comp + '"');
-    expect(logStr).toContain(' info    shareName: "' + shareName + '"');
-    expect(logStr).toContain(' info    domain: "' + domain + '", user: "' + user + '"');
-    expect(logStr).toContain(' info    password: "****"');
-    expect(logStr).toContain(' info    throws: false');
-    expect(logStr).toContain(' success Succeeded the connecting!');
-    expect(logStr).toContain(' info    Finished the function smbcn.connectSyncSurelyUsingLog');
+    expC('Start the function smbcn.connectSyncSurelyUsingLog');
+    expC('Connecting to "' + comp + '"');
+    expC('shareName: "' + shareName + '"');
+    expC('domain: "' + domain + '", user: "' + user + '"');
+    expC('password: "****"');
+    expC('throws: false');
+    expC('Succeeded the connecting!');
+    expC('Finished the function smbcn.connectSyncSurelyUsingLog');
 
     // Cleans
     fse.removeSync(logFile);
@@ -129,14 +130,8 @@ describe('SmbConnector', function () {
   test(testName, function () {
     var logFile = os.makeTmpPath() + '.log';
     var lggr = logger.create('info/' + logFile);
-    var retVal;
-    var comp;
-    var share;
-    var domain;
-    var user;
-    var pwd;
 
-    retVal = smbcn.connectSyncUsingSchema(schema, '*', {
+    var retVal = smbcn.connectSyncUsingSchema(schema, '*', {
       logger: lggr,
       isDryRun: true
     });
@@ -145,54 +140,62 @@ describe('SmbConnector', function () {
     var logStr = fs.readFileSync(logFile, { encoding: 'utf8' });
     // console.log(logStr);
 
-    expect(logStr).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
-    expect(logStr).toContain(' info    taskName: "*"');
+    var expC = expect(logStr).toContain; // Shorthand
+    expC('Start the function smbcn.connectSyncSurelyUsingLog');
+    expC('taskName: "*"');
+    expC('dry-run [smbcn.connectSyncUsingSchema]:');
+    expC('dry-run [smbcn.connectSyncSurelyUsingLog]:');
+    expC('dry-run [net.SMB.connectSyncSurely]:');
+    expC('dry-run [net.SMB.disconnectSync]:');
 
-    expect(logStr).toContain('dry-run [smbcn.connectSyncUsingSchema]:');
-    expect(logStr).toContain('dry-run [smbcn.connectSyncSurelyUsingLog]:');
+    (function () {
+      var comp = schema.components.homeNasIP;
+      var share = schema.components.ipc;
+      var domain = '';
+      var user = schema.tasks.home.user;
+      var pwd = 'null';
+      expC('Start the task: home');
+      expC('Connecting to "' + comp + '"');
+      expC('shareName: "' + share + '"');
+      expC('domain: "' + domain + '", user: "' + user + '"');
+      expC('password: "****"');
+      expC('throws: false');
+      expC(_getCmdNetDel(comp, share));
+      expC(_getCmdNetCn(comp, share, domain, user, pwd));
+      expC('Succeeded the connecting!');
+    })();
 
-    expect(logStr).toContain('dry-run [net.SMB.connectSyncSurely]:');
-    expect(logStr).toContain('dry-run [net.SMB.disconnectSync]:');
+    (function () {
+      var comp = schema.tasks['work:office'].comp;
+      var share = schema.components.ipc;
+      var domain = schema.components.workNetDomain;
+      var user = schema.components.workUsername;
+      var pwd = 'null';
+      expC('Start the task: work:office');
+      expC('available: false => Skip this task');
+      expect(logStr).not.toContain('Connecting to "' + comp + '"');
+      expect(logStr).not.toContain(_getCmdNetDel(comp, share));
+      expect(logStr).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
+    })();
 
+    (function () {
+      var comp = schema.tasks['work:labo'].comp;
+      var share = schema.tasks['work:labo'].share;
+      var domain = schema.tasks['work:labo'].domain;
+      var user = schema.components.workUsername;
+      var pwd = 'null';
+      expC('Start the task: work:labo');
+      expC('Connecting to "' + comp + '"');
+      expC('shareName: "' + share + '"');
+      expC('domain: "' + domain + '", user: "' + user + '"');
+      expC('password: "****"');
+      expC('throws: false');
+      expC(_getCmdNetDel(comp, share));
+      expC(_getCmdNetCn(comp, share, domain, user, pwd));
+      expC('Succeeded the connecting!');
+    })();
 
-    comp = schema.components.homeNasIP;
-    share = schema.components.ipc;
-    domain = '';
-    user = schema.tasks.home.user;
-    pwd = 'null';
-    expect(logStr).toContain(' info    Connecting to "' + comp + '"');
-    expect(logStr).toContain(' info    shareName: "' + share + '"');
-    expect(logStr).toContain(' info    domain: "' + domain + '", user: "' + user + '"');
-    expect(logStr).toContain(' info    password: "****"');
-    expect(logStr).toContain(' info    throws: false');
-    expect(logStr).toContain(_getCmdNetDel(comp, share));
-    expect(logStr).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
-    expect(logStr).toContain(' success Succeeded the connecting!');
-
-    comp = schema.tasks['work:office'].comp;
-    share = schema.components.ipc;
-    domain = schema.components.workNetDomain;
-    user = schema.components.workUsername;
-    pwd = 'null';
-    expect(logStr).not.toContain(' info    Connecting to "' + comp + '"');
-    expect(logStr).not.toContain(_getCmdNetDel(comp, share));
-    expect(logStr).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
-
-    comp = schema.tasks['work:labo'].comp;
-    share = schema.tasks['work:labo'].share;
-    domain = schema.tasks['work:labo'].domain;
-    user = schema.components.workUsername;
-    pwd = 'null';
-    expect(logStr).toContain(' info    Connecting to "' + comp + '"');
-    expect(logStr).toContain(' info    shareName: "' + share + '"');
-    expect(logStr).toContain(' info    domain: "' + domain + '", user: "' + user + '"');
-    expect(logStr).toContain(' info    password: "****"');
-    expect(logStr).toContain(' info    throws: false');
-    expect(logStr).toContain(_getCmdNetDel(comp, share));
-    expect(logStr).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
-    expect(logStr).toContain(' success Succeeded the connecting!');
-
-    expect(logStr).toContain(' info    Finished the function smbcn.connectSyncSurelyUsingLog');
+    expC('Finished the function smbcn.connectSyncSurelyUsingLog');
 
     // Cleans
     fse.removeSync(logFile);
@@ -203,16 +206,9 @@ describe('SmbConnector', function () {
   test(testName, function () {
     var logFile = os.makeTmpPath() + '.log';
     var lggr = logger.create('info/' + logFile);
-    var retVal;
-    var comp;
-    var share;
-    var domain;
-    var user;
-    var pwd;
-
     var anyVal1 = 'My * P@ss><';
 
-    retVal = smbcn.connectSyncUsingSchema(schema, 'home', {
+    var retVal = smbcn.connectSyncUsingSchema(schema, 'home', {
       logger: lggr,
       overwrites: { anyVal1: anyVal1 },
       isDryRun: true
@@ -222,48 +218,56 @@ describe('SmbConnector', function () {
     var logStr = fs.readFileSync(logFile, { encoding: 'utf8' });
     // console.log(logStr);
 
-    expect(logStr).toContain(' info    Start the function smbcn.connectSyncSurelyUsingLog');
-    expect(logStr).toContain(' info    taskName: "home"');
+    var expC = expect(logStr).toContain; // Shorthand
+    expC('Start the function smbcn.connectSyncSurelyUsingLog');
+    expC('taskName: "home"');
+    expC('dry-run [smbcn.connectSyncUsingSchema]:');
+    expC('dry-run [smbcn.connectSyncSurelyUsingLog]:');
+    expC('dry-run [net.SMB.connectSyncSurely]:');
+    expC('dry-run [net.SMB.disconnectSync]:');
 
-    expect(logStr).toContain('dry-run [smbcn.connectSyncUsingSchema]:');
-    expect(logStr).toContain('dry-run [smbcn.connectSyncSurelyUsingLog]:');
+    (function () {
+      var comp = schema.components.homeNasIP;
+      var share = schema.components.ipc;
+      var domain = '';
+      var user = schema.tasks.home.user;
+      var pwd = anyVal1;
+      expC('Start the task: home');
+      expC('Connecting to "' + comp + '"');
+      expC('shareName: "' + share + '"');
+      expC('domain: "' + domain + '", user: "' + user + '"');
+      expC('password: "****"');
+      expC('throws: false');
+      expC(_getCmdNetDel(comp, share));
+      expC(_getCmdNetCn(comp, share, domain, user, pwd));
+      expC('Succeeded the connecting!');
+    })();
 
-    expect(logStr).toContain('dry-run [net.SMB.connectSyncSurely]:');
-    expect(logStr).toContain('dry-run [net.SMB.disconnectSync]:');
+    (function () {
+      var comp = schema.tasks['work:office'].comp;
+      var share = schema.components.ipc;
+      var domain = schema.components.workNetDomain;
+      var user = schema.components.workUsername;
+      var pwd = 'null';
+      expect(logStr).not.toContain('Start the task: work:office');
+      expect(logStr).not.toContain('Connecting to "' + comp + '"');
+      expect(logStr).not.toContain(_getCmdNetDel(comp, share));
+      expect(logStr).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
+    })();
 
-    comp = schema.components.homeNasIP;
-    share = schema.components.ipc;
-    domain = '';
-    user = schema.tasks.home.user;
-    pwd = anyVal1;
-    expect(logStr).toContain(' info    Connecting to "' + comp + '"');
-    expect(logStr).toContain(' info    shareName: "' + share + '"');
-    expect(logStr).toContain(' info    domain: "' + domain + '", user: "' + user + '"');
-    expect(logStr).toContain(' info    password: "****"');
-    expect(logStr).toContain(' info    throws: false');
-    expect(logStr).toContain(_getCmdNetDel(comp, share));
-    expect(logStr).toContain(_getCmdNetCn(comp, share, domain, user, pwd));
-    expect(logStr).toContain(' success Succeeded the connecting!');
+    (function () {
+      var comp = schema.tasks['work:labo'].comp;
+      var share = schema.tasks['work:labo'].share;
+      var domain = schema.tasks['work:labo'].domain;
+      var user = schema.components.workUsername;
+      var pwd = 'null';
+      expect(logStr).not.toContain('Start the task: work:labo');
+      expect(logStr).not.toContain('Connecting to "' + comp + '"');
+      expect(logStr).not.toContain(_getCmdNetDel(comp, share));
+      expect(logStr).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
+    })();
 
-    comp = schema.tasks['work:office'].comp;
-    share = schema.components.ipc;
-    domain = schema.components.workNetDomain;
-    user = schema.components.workUsername;
-    pwd = 'null';
-    expect(logStr).not.toContain(' info    Connecting to "' + comp + '"');
-    expect(logStr).not.toContain(_getCmdNetDel(comp, share));
-    expect(logStr).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
-
-    comp = schema.tasks['work:labo'].comp;
-    share = schema.tasks['work:labo'].share;
-    domain = schema.tasks['work:labo'].domain;
-    user = schema.components.workUsername;
-    pwd = 'null';
-    expect(logStr).not.toContain(' info    Connecting to "' + comp + '"');
-    expect(logStr).not.toContain(_getCmdNetDel(comp, share));
-    expect(logStr).not.toContain(_getCmdNetCn(comp, share, domain, user, pwd));
-
-    expect(logStr).toContain(' info    Finished the function smbcn.connectSyncSurelyUsingLog');
+    expC('Finished the function smbcn.connectSyncSurelyUsingLog');
 
     // Cleans
     fse.removeSync(logFile);

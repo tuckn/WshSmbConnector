@@ -142,7 +142,7 @@ cli.addProgram({
 cli.addProgram({
   command: 'schemaConnect [overwriteKey:val...]',
   description: 'The command to connect a Windows to resources with the schema',
-  version: '1.0.0',
+  version: '3.0.1',
   options: [
     ['-D, --dir-path <path>', 'The path name where the schema JSON is located. <Directory Path> or "cwd", "portable", "userProfile". Default: "cmd" is "%CD%\\.wsh"'],
     ['-F, --file-name <name>', 'A JSON file name.', 'settings.json'],

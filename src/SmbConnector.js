@@ -203,7 +203,8 @@
     lggr.info('Start function ' + FN);
     lggr.info('taskName: "' + taskName + '"');
 
-    var taskNames = Object.keys(schema.tasks);
+    var tasks = schema.tasks; // Shorthand
+    var taskNames = Object.keys(tasks);
     var regNameMatcher;
     if (includes(taskName, '*')) {
       regNameMatcher = new RegExp(taskName.replace(/\*/g, '.*'));
@@ -231,14 +232,14 @@
       });
     }
 
-    var tasks = schema.tasks; // Shorthand
-
     var isDryRun = obtain(options, 'isDryRun', false);
     if (isDryRun) lggr.info('dry-run [' + FN + ']:');
 
     filteredNames.forEach(function (taskName) {
+      lggr.info('Start the task: ' + taskName);
+
       if (tasks[taskName].available === false) {
-        lggr.info('Skip the non-available task: ' + taskName);
+        lggr.info('available: false => Skip this task');
         return;
       }
 
