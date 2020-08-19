@@ -12,6 +12,7 @@ Download this ZIP and unzipping or Use following `git` command.
 
 ```console
 D:\> git clone https://github.com/tuckn/WshSmbConnector.git
+D:\> cd WshSmbConnector
 ```
 
 Now suppose your directory structure looks like this.
@@ -86,10 +87,13 @@ You can also define the values into `components` object.
 
 The values specified as `null` in `components` must be specified CLI arguments.
 
-### Schema Connecting
+### Run with WSH
 
 ```console
-D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss"
+> cscript .\dist\Run.wsf schemaConnect * "myPass:user p@ss"
+```
+
+```console
 [2020-08-01T06:50:28] info    taskName: "*"
 [2020-08-01T06:50:28] info    matched tasks: 2
 [2020-08-01T06:50:28] info    Start the function smbcn.connectSyncSurelyUsingLog
@@ -111,10 +115,13 @@ D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss"
 [2020-08-01T06:50:28] info    Finished the function smbcn.connectSyncSurelyUsingLog
 ```
 
-Specify any tasks with property names.
+Specify any tasks to run with property names.
 
 ```console
-D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss" --task "home"
+> cscript .\dist\Run.wsf schemaConnect "home" "myPass:user p@ss"
+```
+
+```console
 [2020-08-01T06:50:28] info    taskName: "home"
 [2020-08-01T06:50:28] info    matched tasks: 1
 [2020-08-01T06:50:28] info    Start the function smbcn.connectSyncSurelyUsingLog
@@ -131,9 +138,11 @@ D:\WshSmbConnector>cscript Run.wsf schemaConnect "myPass:user p@ss" --task "home
 Show the help.
 
 ```console
-> cscript Run.wsf schemaConnect --help
+> cscript .\dist\Run.wsf schemaConnect --help
+```
 
-Usage: schemaConnect [overwriteKey:val...] [options]
+```console
+Usage: schemaConnect <taskName> [overwriteKey:val...] [options]
 
 The command to connect a Windows to resources with the schema
 
@@ -143,14 +152,13 @@ Options:
   -F, --file-name <name> A JSON file name. (default: "settings.json")
   -E, --encoding <name>  The JSON file encoding. (default: "utf-8")
   -N, --prop-name <name> A property name of the schema object. (default: "connectSchema")
-  -T, --task <name>  Specify the task name to connect to. e.g. "work:*" (default: "*")
   -L, --logger <val>     <level>/<transportation>. e.g. "warn/popup".  (default: "info/console")
   -H, --has-result       Show a result(net use) (default: false)
   -R, --dry-run          No execute. Outputs the string of command. (default: false)
   -h, --help             Output usage information
 ```
 
-See [Wsh.ConfigStore](https://docs.tuckn.net/WshConfigStore/) for the options `--dir-path` and `--fine-name`.
+See [Wsh.ConfigStore](https://docs.tuckn.net/WshConfigStore/) for the options `--dir-path` and `--file-name`.
 and see [Wsh.Logger](https://docs.tuckn.net/WshLogger/) for the options `--logger`.
 
 ## Installation as Module

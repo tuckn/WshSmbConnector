@@ -121,7 +121,7 @@ cli.addProgram({
  * Connects the resources defined on a schema.
  *
  * @example
- * Usage: schemaConnect [overwriteKey:val...] [options]
+ * Usage: schemaConnect <taskName> [overwriteKey:val...] [options]
  *
  * The command to connect a Windows to resources with the schema
  *
@@ -131,7 +131,6 @@ cli.addProgram({
  *   -F, --file-name <name> A JSON file name. (default: "settings.json")
  *   -E, --encoding <name>  The JSON file encoding. (default: "utf-8")
  *   -N, --prop-name <name> A property name of the schema object. (default: "connectSchema")
- *   -T, --task <name>  Specify the task name to connect to. e.g. "work:*" (default: "*")
  *   -L, --logger <val>     <level>/<transportation>. e.g. "warn/popup".  (default: "info/console")
  *   -H, --has-result       Show a result(net use) (default: false)
  *   -R, --dry-run          No execute. Outputs the string of command. (default: false)
@@ -140,20 +139,19 @@ cli.addProgram({
  * @memberof CLI
  */
 cli.addProgram({
-  command: 'schemaConnect [overwriteKey:val...]',
+  command: 'schemaConnect <taskName> [overwriteKey:val...]',
   description: 'The command to connect a Windows to resources with the schema',
-  version: '3.0.1',
+  version: '4.0.0',
   options: [
     ['-D, --dir-path <path>', 'The path name where the schema JSON is located. <Directory Path> or "cwd", "portable", "userProfile". Default: "cmd" is "%CD%\\.wsh"'],
     ['-F, --file-name <name>', 'A JSON file name.', 'settings.json'],
     ['-E, --encoding <name>', 'The JSON file encoding.', CD.ado.charset.utf8],
     ['-N, --prop-name <name>', 'A property name of the schema object.', 'connectSchema'],
-    ['-T, --task <name>', 'Specify the task name to connect to. e.g. "work:*"', '*'],
     ['-L, --logger <val>', '<level>/<transportation>. e.g. "warn/popup". ', 'info/console'],
     ['-H, --has-result', 'Show a result(net use)'],
     ['-R, --dry-run', 'No execute. Outputs the string of command.']
   ],
-  action: function (overwrites, opt) {
+  action: function (taskName, overwrites, opt) {
     var overwritesObj = {};
     if (isSolidArray(overwrites)) {
       overwrites.forEach(function (setStr) {
@@ -168,7 +166,7 @@ cli.addProgram({
     });
     var schema = conf.get(opt.propName);
 
-    var retVal = smbcn.connectSyncUsingSchema(schema, opt.task, {
+    var retVal = smbcn.connectSyncUsingSchema(schema, taskName, {
       overwrites: overwritesObj,
       logger: opt.logger,
       showsResult: opt.hasResult,

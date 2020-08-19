@@ -1,7 +1,7 @@
 {
   "name": "@tuckn/WshSmbConnector",
   "description": "The WSH (Windows Script Host) CLI that connects to SMB resources according to the schema defined in a JSON file.",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "author": "Tuckn <tuckn333+github@gmail.com>",
   "private": false,
   "license": "MIT",
@@ -50,6 +50,7 @@
     "test:name:connectSyncUsingSchema_dryRun_home": ".\\scripts\\Test SmbConnector -t connectSyncUsingSchema_dryRun_home$",
     "test:name:connectSyncUsingSchema": ".\\scripts\\Test SmbConnector -t connectSyncUsingSchema$",
     "test:SmbConnector": ".\\scripts\\Test SmbConnector",
+    "test:name:schemaConnect_help_noArg": ".\\scripts\\Test Run -t schemaConnect_help_noArg$",
     "test:name:connect_help": ".\\scripts\\Test Run -t connect_help$",
     "test:name:connect_dryRun": ".\\scripts\\Test Run -t connect_dryRun$",
     "test:name:disconnect_help": ".\\scripts\\Test Run -t disconnect_help$",

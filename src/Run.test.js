@@ -121,13 +121,38 @@ describe('Run', function () {
     );
   });
 
+  testName = 'schemaConnect_help_noArg';
+  test(testName, function () {
+    var args = ['schemaConnect'];
+    var retObj = execSync(testRun + ' ' + args.join(' '));
+    // console.dir(retObj);
+    expect(retObj.error).toBeTruthy();
+    expect(retObj.stdout).toBe(''); // Stdout
+
+    var expC = expect(retObj.stderr).toContain; // Shorthand
+    expC('Usage: schemaConnect <taskName> [overwriteKey:val...] [options]');
+    expC('The command to connect a Windows to resources with the schema');
+    expC('Options:');
+    expC('  -V, --version          Output the version number');
+    expC('  -D, --dir-path <path>  The path name where the schema JSON is located. <Directory Path> or "cwd", "portable", "userProfile". Default: "cmd" is "%CD%\\.wsh"');
+    // ...
+  });
+
   testName = 'schemaConnect_help';
   test(testName, function () {
-    expect('@TODO').toBe('TEST');
-
-    var args = ['schemaConnect', '-h'];
+    var args = ['schemaConnect', '--help'];
     var retObj = execSync(testRun + ' ' + args.join(' '));
-    console.dir(retObj);
+    // console.dir(retObj);
+    expect(retObj.error).toBeTruthy();
+    expect(retObj.stdout).toBe(''); // Stdout
+
+    var expC = expect(retObj.stderr).toContain; // Shorthand
+    expC('Usage: schemaConnect <taskName> [overwriteKey:val...] [options]');
+    expC('The command to connect a Windows to resources with the schema');
+    expC('Options:');
+    expC('  -V, --version          Output the version number');
+    expC('  -D, --dir-path <path>  The path name where the schema JSON is located. <Directory Path> or "cwd", "portable", "userProfile". Default: "cmd" is "%CD%\\.wsh"');
+    // ...
   });
 
   var schema = {
@@ -177,7 +202,7 @@ describe('Run', function () {
     fse.ensureDirSync(wshDir);
     fse.writeJsonSync(schemaJson, schema);
 
-    var args = ['schemaConnect', '-D', wshDir, '-R'];
+    var args = ['schemaConnect', '*', '-D', wshDir, '-R'];
     var retObj = execSync(testRun + ' ' + args.join(' '));
     // console.dir(retObj);
     expect(retObj.error).toBeFalsy();
@@ -185,18 +210,18 @@ describe('Run', function () {
 
     // Shorthands
     var cmp = schema.connectSchema.components;
-    var rsrc = schema.connectSchema.tasks;
+    var tasks = schema.connectSchema.tasks;
     var expC = expect(retObj.stdout).toContain;
 
     expC('Start function smbcn.connectSyncUsingSchema');
     expC('taskName: "*"');
-    expC('matched tasks: ' + Object.keys(rsrc).length);
+    expC('matched tasks: ' + Object.keys(tasks).length);
     expC('Start the function smbcn.connectSyncSurelyUsingLog');
 
     (function () {
       var comp = cmp.homeNasIP;
       var share = cmp.ipc;
-      var user = rsrc.home.user;
+      var user = tasks.home.user;
       var domain = '';
       var pwd = 'null';
       expC('Start the task: home');
@@ -216,10 +241,10 @@ describe('Run', function () {
     })();
 
     (function () {
-      var comp = rsrc['work:labo'].comp;
-      var share = rsrc['work:labo'].share;
+      var comp = tasks['work:labo'].comp;
+      var share = tasks['work:labo'].share;
       var user = cmp.workUsername;
-      var domain = rsrc['work:labo'].domain;
+      var domain = tasks['work:labo'].domain;
       var pwd = 'null';
       expC('Start the task: work:labo');
       expC('Connecting to "' + comp + '"');
@@ -252,7 +277,7 @@ describe('Run', function () {
     var anyVal1 = 'My * P@ss><_1';
     var anyVal2 = 'My * P@ss><_2';
     var args = [
-      'schemaConnect',
+      'schemaConnect', '*',
       '"anyVal1:' + anyVal1 + '"',
       '"anyVal2:' + anyVal2 + '"',
       '-D', wshDir,
@@ -265,18 +290,18 @@ describe('Run', function () {
 
     // Shorthands
     var cmp = schema.connectSchema.components;
-    var rsrc = schema.connectSchema.tasks;
+    var tasks = schema.connectSchema.tasks;
     var expC = expect(retObj.stdout).toContain;
 
     expC('Start function smbcn.connectSyncUsingSchema');
     expC('taskName: "*"');
-    expC('matched tasks: ' + Object.keys(rsrc).length);
+    expC('matched tasks: ' + Object.keys(tasks).length);
     expC('Start the function smbcn.connectSyncSurelyUsingLog');
 
     (function () {
       var comp = cmp.homeNasIP;
       var share = cmp.ipc;
-      var user = rsrc.home.user;
+      var user = tasks.home.user;
       var domain = '';
       var pwd = anyVal1;
       expC('Start the task: home');
@@ -296,10 +321,10 @@ describe('Run', function () {
     })();
 
     (function () {
-      var comp = rsrc['work:labo'].comp;
-      var share = rsrc['work:labo'].share;
+      var comp = tasks['work:labo'].comp;
+      var share = tasks['work:labo'].share;
       var user = cmp.workUsername;
-      var domain = rsrc['work:labo'].domain;
+      var domain = tasks['work:labo'].domain;
       var pwd = anyVal2;
       expC('Start the task: work:labo');
       expC('Connecting to "' + comp + '"');
@@ -325,7 +350,7 @@ describe('Run', function () {
     var anyVal1 = 'My * P@ss><_1';
     var anyVal2 = 'My * P@ss><_2';
     var args = [
-      'schemaConnect',
+      'schemaConnect', '*',
       '"anyVal1:' + anyVal1 + '"',
       '"anyVal2:' + anyVal2 + '"',
       '-R'
@@ -337,18 +362,18 @@ describe('Run', function () {
 
     // Shorthands
     var cmp = schema.connectSchema.components;
-    var rsrc = schema.connectSchema.tasks;
+    var tasks = schema.connectSchema.tasks;
     var expC = expect(retObj.stdout).toContain;
 
     expC('Start function smbcn.connectSyncUsingSchema');
     expC('taskName: "*"');
-    expC('matched tasks: ' + Object.keys(rsrc).length);
+    expC('matched tasks: ' + Object.keys(tasks).length);
     expC('Start the function smbcn.connectSyncSurelyUsingLog');
 
     (function () {
       var comp = cmp.homeNasIP;
       var share = cmp.ipc;
-      var user = rsrc.home.user;
+      var user = tasks.home.user;
       var domain = '';
       var pwd = anyVal1;
       expC('Start the task: home');
@@ -368,10 +393,10 @@ describe('Run', function () {
     })();
 
     (function () {
-      var comp = rsrc['work:labo'].comp;
-      var share = rsrc['work:labo'].share;
+      var comp = tasks['work:labo'].comp;
+      var share = tasks['work:labo'].share;
       var user = cmp.workUsername;
-      var domain = rsrc['work:labo'].domain;
+      var domain = tasks['work:labo'].domain;
       var pwd = anyVal2;
       expC('Start the task: work:labo');
       expC('Connecting to "' + comp + '"');
