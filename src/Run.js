@@ -130,7 +130,7 @@ cli.addProgram({
  *   -D, --dir-path <path>  The path name where the schema JSON is located. <Directory Path> or "cwd", "portable", "userProfile". Default: "cmd" is "%CD%\\.wsh"
  *   -F, --file-name <name> A JSON file name. (default: "settings.json")
  *   -E, --encoding <name>  The JSON file encoding. (default: "utf-8")
- *   -N, --prop-name <name> A property name of the schema object. (default: "connectSchema")
+ *   -N, --prop-name <name> A property name of the schema object. (default: "smbConnectorSchema")
  *   -L, --logger <val>     <level>/<transportation>. e.g. "warn/popup".  (default: "info/console")
  *   -H, --has-result       Show a result(net use) (default: false)
  *   -R, --dry-run          No execute. Outputs the string of command. (default: false)
@@ -146,7 +146,7 @@ cli.addProgram({
     ['-D, --dir-path <path>', 'The path name where the schema JSON is located. <Directory Path> or "cwd", "portable", "userProfile". Default: "cmd" is "%CD%\\.wsh"'],
     ['-F, --file-name <name>', 'A JSON file name.', 'settings.json'],
     ['-E, --encoding <name>', 'The JSON file encoding.', CD.ado.charset.utf8],
-    ['-N, --prop-name <name>', 'A property name of the schema object.', 'connectSchema'],
+    ['-N, --prop-name <name>', 'A property name of the schema object.', 'smbConnectorSchema'],
     ['-L, --logger <val>', '<level>/<transportation>. e.g. "warn/popup". ', 'info/console'],
     ['-H, --has-result', 'Show a result(net use)'],
     ['-R, --dry-run', 'No execute. Outputs the string of command.']

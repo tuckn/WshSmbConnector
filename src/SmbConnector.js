@@ -118,13 +118,13 @@
 
   // smbcn.connectSyncUsingSchema {{{
   /**
-   * @typedef {object} typeNetSmbConnectSchema
+   * @typedef {object} typeNetSmbsmbConnectorSchema
    * @property {object} components
-   * @property {...typeNetSmbConnectSchemaTask} tasks
+   * @property {...typeNetSmbsmbConnectorSchemaTask} tasks
    */
 
   /**
-   * @typedef {object} typeNetSmbConnectSchemaTask
+   * @typedef {object} typeNetSmbsmbConnectorSchemaTask
    * @property {string} description
    * @property {boolean} [available=true] - If specifying false, Skips the task.
    * @property {string} comp - The computer name or IP address.
@@ -184,7 +184,7 @@
    * // command is `net use \\PC67890\C$ myP@ss /user:PC67890\ID123456`
    * @function connectSyncUsingSchema
    * @memberof Wsh.SmbConnector
-   * @param {typeNetSmbConnectSchema} schema
+   * @param {typeNetSmbsmbConnectorSchema} schema
    * @param {string} [taskName] - The task name to connect
    * @param {object} [options] - Optional parameters.
    * @param {object} [options.overwrites] - Ex. { anyVal1: 'myP@ss', anyVal2: 'p_w_d' }

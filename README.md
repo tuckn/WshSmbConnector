@@ -33,11 +33,11 @@ D:\WshSmbConnector\
 The JSON default path to load is _%CD%\.wsh\\settings.json_.
 See _.\\.wsh\\settings.json_ as example.
 
-Write your connection settings to the JSON file, for example,
+Write your connection schema on the JSON file, for example,
 
 ```json
 {
-  "connectSchema": {
+  "smbConnectorSchema": {
     "tasks": {
       "home": {
         "comp": "11.22.33.44",
@@ -57,11 +57,12 @@ Write your connection settings to the JSON file, for example,
 }
 ```
 
-You can also define the values into `components` object.
+You can also define variables into `components` object.
+The defined variable can be used as `${valName}` in `tasks`.
 
 ```json
 {
-  "connectSchema": {
+  "smbConnectorSchema": {
     "components": {
       "myUser": "user1",
       "myPass": null
@@ -151,7 +152,7 @@ Options:
   -D, --dir-path <path>  The path name where the schema JSON is located. <Directory Path> or "cwd", "portable", "userProfile". Default: "cmd" is "%CD%\\.wsh"
   -F, --file-name <name> A JSON file name. (default: "settings.json")
   -E, --encoding <name>  The JSON file encoding. (default: "utf-8")
-  -N, --prop-name <name> A property name of the schema object. (default: "connectSchema")
+  -N, --prop-name <name> A property name of the schema object. (default: "smbConnectorSchema")
   -L, --logger <val>     <level>/<transportation>. e.g. "warn/popup".  (default: "info/console")
   -H, --has-result       Show a result(net use) (default: false)
   -R, --dry-run          No execute. Outputs the string of command. (default: false)
@@ -204,6 +205,31 @@ The content of above _Run.wsf_ is
 
 I recommend this .wsf file encoding to be UTF-8 [BOM, CRLF].
 
+### Together with another Apps
+
+If you want to use it together with another Apps, install as following
+
+```console
+> git clone https://github.com/tuckn/WshBasicPackage.git ./WshModules/WshBasicPackage
+> git clone https://github.com/tuckn/WshSmbConnector.git ./WshModules/WshSmbConnector
+> git clone https://github.com/tuckn/WshDirBackUpper.git ./WshModules/WshDirBackUpper
+or
+> git submodule add https://github.com/tuckn/WshBasicPackage.git ./WshModules/WshBasicPackage
+> git submodule add https://github.com/tuckn/WshSmbConnector.git ./WshModules/WshSmbConnector
+> git submodule add https://github.com/tuckn/WshDirBackUpper.git ./WshModules/WshDirBackUpper
+```
+
+```xml
+<package>
+  <job id = "run">
+    <script language="JScript" src="./WshModules/WshBasicPackage/dist/bundle.js"></script>
+    <script language="JScript" src="./WshModules/WshSmbConnector/dist/module.js"></script>
+    <script language="JScript" src="./WshModules/WshDirBackUpper/dist/module.js"></script>
+    <script language="JScript" src="./MyScript.js"></script>
+  </job>
+</package>
+```
+
 ## Usage as Module
 
 Now _.\\MyScript.js_ (JScript ) can use `Wsh.SmbConnector`.
@@ -231,7 +257,7 @@ Schema Connecting
 var smbcn = Wsh.SmbConnector; // Shorthand
 
 var schema = {
-  connectSchema: {
+  smbConnectorSchema: {
     components: {
       myUser: 'user1',
       myPass: null

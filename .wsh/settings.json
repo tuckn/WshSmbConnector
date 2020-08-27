@@ -1,5 +1,5 @@
 {
-    "connectSchema": {
+    "smbConnectorSchema": {
         "description": "Example Schema WshSmbConnector",
         "components": {
             "ipc": "IPC$",

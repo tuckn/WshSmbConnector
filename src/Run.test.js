@@ -142,11 +142,10 @@ describe('Run', function () {
   test(testName, function () {
     var args = ['schemaConnect', '--help'];
     var retObj = execSync(testRun + ' ' + args.join(' '));
-    // console.dir(retObj);
-    expect(retObj.error).toBeTruthy();
-    expect(retObj.stdout).toBe(''); // Stdout
+    expect(retObj.error).toBeFalsy();
+    expect(retObj.stderr).toBe(''); // Stderr
 
-    var expC = expect(retObj.stderr).toContain; // Shorthand
+    var expC = expect(retObj.stdout).toContain; // Shorthand
     expC('Usage: schemaConnect <taskName> [overwriteKey:val...] [options]');
     expC('The command to connect a Windows to resources with the schema');
     expC('Options:');
@@ -156,7 +155,7 @@ describe('Run', function () {
   });
 
   var schema = {
-    connectSchema: {
+    smbConnectorSchema: {
       components: {
         ipc: 'IPC$',
         homeNasIP: '11.22.33.44',
@@ -209,8 +208,8 @@ describe('Run', function () {
     expect(retObj.stderr).toBe('');
 
     // Shorthands
-    var cmp = schema.connectSchema.components;
-    var tasks = schema.connectSchema.tasks;
+    var cmp = schema.smbConnectorSchema.components;
+    var tasks = schema.smbConnectorSchema.tasks;
     var expC = expect(retObj.stdout).toContain;
 
     expC('Start function smbcn.connectSyncUsingSchema');
@@ -289,8 +288,8 @@ describe('Run', function () {
     expect(retObj.stderr).toBe('');
 
     // Shorthands
-    var cmp = schema.connectSchema.components;
-    var tasks = schema.connectSchema.tasks;
+    var cmp = schema.smbConnectorSchema.components;
+    var tasks = schema.smbConnectorSchema.tasks;
     var expC = expect(retObj.stdout).toContain;
 
     expC('Start function smbcn.connectSyncUsingSchema');
@@ -361,8 +360,8 @@ describe('Run', function () {
     expect(retObj.stderr).toBe('');
 
     // Shorthands
-    var cmp = schema.connectSchema.components;
-    var tasks = schema.connectSchema.tasks;
+    var cmp = schema.smbConnectorSchema.components;
+    var tasks = schema.smbConnectorSchema.tasks;
     var expC = expect(retObj.stdout).toContain;
 
     expC('Start function smbcn.connectSyncUsingSchema');

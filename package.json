@@ -1,7 +1,7 @@
 {
   "name": "@tuckn/WshSmbConnector",
   "description": "The WSH (Windows Script Host) CLI that connects to SMB resources according to the schema defined in a JSON file.",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "author": "Tuckn <tuckn333+github@gmail.com>",
   "private": false,
   "license": "MIT",
