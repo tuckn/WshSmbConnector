@@ -119,13 +119,14 @@
   // smbcn.connectSyncUsingSchema {{{
   /**
    * @typedef {object} typeNetSmbsmbConnectorSchema
-   * @property {object} components
+   * @property {string} [description]
+   * @property {object} [components]
    * @property {...typeNetSmbsmbConnectorSchemaTask} tasks
    */
 
   /**
    * @typedef {object} typeNetSmbsmbConnectorSchemaTask
-   * @property {string} description
+   * @property {string} [description] - The task description.
    * @property {boolean} [available=true] - If specifying false, Skips the task.
    * @property {string} comp - The computer name or IP address.
    * @property {string} [share='IPC$'] - The share name.
