@@ -141,7 +141,7 @@ cli.addProgram({
 cli.addProgram({
   command: 'schemaConnect <taskName> [overwriteKey:val...]',
   description: 'The command to connect a Windows to resources with the schema',
-  version: '5.0.0',
+  version: '5.0.1',
   options: [
     ['-D, --dir-path <path>', 'The path name where the schema JSON is located. <Directory Path> or "cwd", "portable", "userProfile". Default: "cmd" is "%CD%\\.wsh"'],
     ['-F, --file-name <name>', 'A JSON file name.', 'settings.json'],
@@ -156,7 +156,7 @@ cli.addProgram({
     if (isSolidArray(overwrites)) {
       overwrites.forEach(function (setStr) {
         var strs = setStr.split(':');
-        if (strs.length > 1) overwritesObj[strs[0]] = strs[1];
+        if (strs.length > 1) overwritesObj[strs[0]] = strs.slice(1).join(':');
       });
     }
 
