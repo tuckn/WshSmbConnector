@@ -33,7 +33,7 @@ D:\WshSmbConnector\
 The JSON default path to load is _%CD%\.wsh\\settings.json_.
 See _.\\.wsh\\settings.json_ as example.
 
-Write your connection schema on the JSON file, for example,
+Write your connection schema in the JSON file, for example,
 
 ```json
 {

@@ -44,7 +44,7 @@
     "meta": {
       "title": "WshSmbConnector",
       "description": "The WSH (Windows Script Host) CLI that connects to SMB resources according to the schema defined in a JSON file.",
-      "keyword": "Windows, CLI, WSH, WSF, JScript, VBScript, SMB, command, settings, json, preferences"
+      "keyword": "Windows, CLI, WSH, WSF, JScript, VBScript, SMB, command, json, schema, settings, preferences"
     },
     "search": true,
     "collapse": false,

@@ -22,8 +22,9 @@
     "VBScript",
     "SMB",
     "command",
-    "settings",
     "json",
+    "schema",
+    "settings",
     "preferences"
   ],
   "files": [
