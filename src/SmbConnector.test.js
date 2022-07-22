@@ -11,6 +11,7 @@ var fse = Wsh.FileSystemExtra;
 var logger = Wsh.Logger;
 var smbcn = Wsh.SmbConnector;
 
+var srrd = os.surroundCmdArg;
 var escapeForCmd = os.escapeForCmd;
 var CMD = os.exefiles.cmd;
 var NET = os.exefiles.net;
@@ -25,7 +26,7 @@ var _cb = function (fn/* , args */) {
 
 var _getCmdNetDel = function (comp, share) {
   return 'dry-run [_shRun]: ' + CMD + ' /S /C"'
-      + NET + ' use ' + '\\\\' + comp + '\\' + share + ' /delete /yes 1> ';
+      + NET + ' use ' + '\\\\' + comp + '\\' + share + ' /delete /yes 1>';
 };
 
 var _getCmdNetCn = function (comp, share, domain, user, pwd) {
@@ -33,7 +34,7 @@ var _getCmdNetCn = function (comp, share, domain, user, pwd) {
 
   return 'dry-run [_shRun]: ' + CMD + ' /S /C"'
     + NET + ' use ' + '\\\\' + comp + '\\' + share
-    + ' ' + escapeForCmd(pwd) + ' /user:' + domainStr + user + ' /persistent:no 1> ';
+    + ' ' + srrd(escapeForCmd(pwd)) + ' /user:' + domainStr + user + ' /persistent:no 1>';
 };
 
 describe('SmbConnector', function () {
@@ -66,10 +67,10 @@ describe('SmbConnector', function () {
     expC('dry-run [net.SMB.connectSyncSurely]: ');
     expC('dry-run [net.SMB.disconnectSync]: ');
     expC('dry-run [_shRun]: ' + CMD + ' /S /C"'
-      + NET + ' use ' + '\\\\' + comp + '\\' + shareName + ' /delete /yes 1> ');
+      + NET + ' use ' + '\\\\' + comp + '\\' + shareName + ' /delete /yes 1>');
     expC('dry-run [_shRun]: ' + CMD + ' /S /C"'
       + NET + ' use ' + '\\\\' + comp + '\\' + shareName
-      + ' ' + pwd + ' /user:' + domain + '\\' + user + ' /persistent:no 1> ');
+      + ' ' + pwd + ' /user:' + domain + '\\' + user + ' /persistent:no 1>');
 
     expC('Start the function smbcn.connectSyncSurelyUsingLog');
     expC('Connecting to "' + comp + '"');

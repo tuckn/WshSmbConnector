@@ -16,7 +16,7 @@ var fse = Wsh.FileSystemExtra;
 var child_process = Wsh.ChildProcess;
 
 var includes = util.includes;
-var srr = os.surroundPath;
+var srrd = os.surroundCmdArg;
 var escapeForCmd = os.escapeForCmd;
 var CMD = os.exefiles.cmd;
 var CSCRIPT = os.exefiles.cscript;
@@ -25,14 +25,14 @@ var execSync = child_process.execSync;
 
 var testRun;
 if (includes(process.execArgv, '//job:test:dist:Run')) {
-  testRun = srr(CSCRIPT) + ' ' + srr(path.join(__dirname, 'dist', 'Run.wsf')) + ' //nologo';
+  testRun = srrd(CSCRIPT) + ' ' + srrd(path.join(__dirname, 'dist', 'Run.wsf')) + ' //nologo';
 } else {
-  testRun = srr(CSCRIPT) + ' ' + srr(__filename) + ' //nologo //job:test:src:Run';
+  testRun = srrd(CSCRIPT) + ' ' + srrd(__filename) + ' //nologo //job:test:src:Run';
 }
 
 var _getCmdNetDel = function (comp, share) {
   return 'dry-run [_shRun]: ' + CMD + ' /S /C"'
-      + NET + ' use ' + '\\\\' + comp + '\\' + share + ' /delete /yes 1> ';
+      + NET + ' use ' + '\\\\' + comp + '\\' + share + ' /delete /yes 1>';
 };
 
 var _getCmdNetCn = function (comp, share, domain, user, pwd) {
@@ -40,7 +40,7 @@ var _getCmdNetCn = function (comp, share, domain, user, pwd) {
 
   return 'dry-run [_shRun]: ' + CMD + ' /S /C"'
     + NET + ' use ' + '\\\\' + comp + '\\' + share
-    + ' ' + escapeForCmd(pwd) + ' /user:' + domainStr + user + ' /persistent:no 1> ';
+    + ' ' + srrd(escapeForCmd(pwd)) + ' /user:' + domainStr + user + ' /persistent:no 1>';
 };
 
 describe('Run', function () {
@@ -117,7 +117,7 @@ describe('Run', function () {
 
     stdout = retObj.stdout;
     expect(stdout).toContain('dry-run [_shRun]: ' + CMD + ' /S /C"'
-      + NET + ' use' + ' \\\\' + comp + '\\' + share + ' /delete /yes 1> '
+      + NET + ' use' + ' \\\\' + comp + '\\' + share + ' /delete /yes 1>'
     );
   });
 
