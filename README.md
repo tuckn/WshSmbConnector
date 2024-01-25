@@ -159,8 +159,8 @@ Options:
   -h, --help             Output usage information
 ```
 
-See [Wsh.ConfigStore](https://docs.tuckn.net/WshConfigStore/) for the options `--dir-path` and `--file-name`.
-and see [Wsh.Logger](https://docs.tuckn.net/WshLogger/) for the options `--logger`.
+See [Wsh.ConfigStore](https://tuckn.net/docs/WshConfigStore/) for the options `--dir-path` and `--file-name`.
+and see [Wsh.Logger](https://tuckn.net/docs/WshLogger/) for the options `--logger`.
 
 ## Installation as Module
 
@@ -293,7 +293,7 @@ You can also use [tuckn/WshBasicPackage](https://github.com/tuckn/WshBasicPackag
 
 ## Documentation
 
-See all specifications [here](https://docs.tuckn.net/WshSmbConnector) and also [WshBasicPackage](https://docs.tuckn.net/WshBasicPackage).
+See all specifications [here](https://tuckn.net/docs/WshSmbConnector/) and also [WshBasicPackage](https://tuckn.net/docs/WshBasicPackage/).
 
 ## License
 

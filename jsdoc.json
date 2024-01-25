@@ -37,9 +37,9 @@
     "openGraph": {
       "title": "WshSmbConnector",
       "type": "website",
-      "image": "https://docs.tuckn.net/WshSmbConnector/img/openGraph-image.png",
+      "image": "https://tuckn.net/docs/WshSmbConnector/img/openGraph-image.png",
       "site_name": "@tuckn/WshSmbConnector",
-      "url": "https://docs.tuckn.net/WshSmbConnector"
+      "url": "https://tuckn.net/docs/WshSmbConnector/"
     },
     "meta": {
       "title": "WshSmbConnector",

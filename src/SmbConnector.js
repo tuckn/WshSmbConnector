@@ -70,8 +70,8 @@
    * @param {string} [user] - The user name with which to log on
    * @param {string} [pwd] - The password. *: produce a prompt for the password.
    * @param {object} [options] - Optional parameters.
-   * @param {(Logger|string|object)} [options.logger] - The Logger instance or create options. See {@link https://docs.tuckn.net/WshLogger/Wsh.Logger.html#.create|Wsh.Logger.create}.
-   * @param {boolean} [options.transportsLog=true] - Outputs Wsh.Logger logs after connecting. See {@link https://docs.tuckn.net/WshLogger/Wsh.Logger.html#.this.transport|Wsh.Logger.transport}.
+   * @param {(Logger|string|object)} [options.logger] - The Logger instance or create options. See {@link https://tuckn.net/docs/WshLogger/Wsh.Logger.html#.create|Wsh.Logger.create}.
+   * @param {boolean} [options.transportsLog=true] - Outputs Wsh.Logger logs after connecting. See {@link https://tuckn.net/docs/WshLogger/Wsh.Logger.html#.this.transport|Wsh.Logger.transport}.
    * @param {boolean} [options.throws=false] - Throws the error, if SMB connecting throws an error.
    * @param {boolean} [options.showsResult=false] - Shows the current session after connecting.
    * @param {boolean} [options.isDryRun=false] - No execute, returns the string of command.
